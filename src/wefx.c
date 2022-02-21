@@ -50,11 +50,8 @@ EXPORT void wefx_clear() {
 }
 
 EXPORT void wefx_draw(unsigned int *screen) {
-  for (int x = 0; x < w; x++) {
-    for (int y = 0; y < h; y++) {
-    	screen[x + y * w] = buffer[x + y * w];
-    }
-  }
+  for(int q = 0; q < w*h; q++)
+	screen[q] = buffer[q];
 }
 
 //////////////////////////////////////////////////////////
