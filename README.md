@@ -18,7 +18,7 @@ make build
 
 If you have python3 installed, you can run `make serve` and it'll build and run a web server for you to play with on http://localhost:8000.
 
-Otherwise, you can use your favorite mini http server to serve the `public` directory (see `make start` for an example).
+Otherwise, you can use your favourite mini http server to serve the `public` directory (see `make start` for an example).
 
 ### Windows
 
