@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      body {
+      	background-color: #cfcfcf;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .wrapper {
+        display: flex;
+        align-items: center;
+        height: 100vh;
+        justify-content: center;
+      }
+    </style>
+
+    <script type="module">
+      const SIZE_OF_INT = 4;
+      const canvas = document.getElementById("screenCanvas");
+      const ctx = canvas.getContext("2d");
+      ctx.imageSmoothingEnabled = false;
+
+      async function bootstrap() {
+        const { instance } = await WebAssembly.instantiateStreaming(
+          fetch("./wefx.wasm")
+        );
+        
+        const { 
+        	memory, 
+        	screen,
+        	init, 
+        	main_loop,
+        	wefx_draw,
+        	wefx_win_width,
+        	wefx_win_height,
+        } = instance.exports;
+
+        init();
+        const width = wefx_win_width();
+        const height = wefx_win_height();
+	    canvas.width = width;
+	    canvas.height = height;        
+        
+        const offset = screen.value;
+        const imgArray = new Uint8ClampedArray(
+          memory.buffer,
+          offset,
+          SIZE_OF_INT * width * height
+        );
+        
+        let start = Date.now();
+        const loop = (t) => {
+          const current = Date.now();
+          const delta = current - start;
+          
+          main_loop(delta * 0.05)
+          wefx_draw(offset);
+          
+          const image = new ImageData(imgArray, width);
+          ctx.putImageData(image, 0, 0);
+
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+
+      bootstrap();
+    </script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <canvas id="screenCanvas"></canvas>
+    </div>
+  </body>
+</html>
