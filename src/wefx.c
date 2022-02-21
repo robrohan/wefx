@@ -11,55 +11,63 @@ color bg_color = 0;
 int w = 0;
 int h = 0;
 
-EXPORT void wefx_open(int width, int height, const char *title) {
-	w = width;
-	h = height;
-	buffer = malloc(w * h * sizeof(int));
+EXPORT void wefx_open(int width, int height, const char *title)
+{
+    w = width;
+    h = height;
+    buffer = malloc(w * h * sizeof(int));
 }
 
-int rgb_to_int(int red, int green, int blue) {
-	int color = (0xFF << 24)
-		+ (blue << 16)
-		+ (green << 8)
-		+ (red);
-	return color;
+int rgb_to_int(int red, int green, int blue)
+{
+    int color = (0xFF << 24) + (blue << 16) + (green << 8) + (red);
+    return color;
 }
 
 // Change the current foreground drawing color.
-EXPORT void wefx_color(int red, int green, int blue) {
-	fg_color = rgb_to_int(red, green, blue);
+EXPORT void wefx_color(int red, int green, int blue)
+{
+    fg_color = rgb_to_int(red, green, blue);
 }
 
 // draw a point at x y using the current colour
-EXPORT void wefx_point(int x, int y) {
-	buffer[x + y * w] = fg_color;
+EXPORT void wefx_point(int x, int y)
+{
+    buffer[x + y * w] = fg_color;
 }
 
 // Change the current background color.
-EXPORT void wefx_clear_color(int red, int green, int blue) {
-	bg_color = rgb_to_int(red, green, blue);
+EXPORT void wefx_clear_color(int red, int green, int blue)
+{
+    bg_color = rgb_to_int(red, green, blue);
 }
 
 // Clear the screen with the background color
-EXPORT void wefx_clear() {
-  for (int x = 0; x < w; x++) {
-    for (int y = 0; y < h; y++) {
-      buffer[x + y * w] = bg_color;
+EXPORT void wefx_clear()
+{
+    for (int x = 0; x < w; x++)
+    {
+        for (int y = 0; y < h; y++)
+        {
+            buffer[x + y * w] = bg_color;
+        }
     }
-  }
 }
 
-EXPORT void wefx_draw(unsigned int *screen) {
-  for(int q = 0; q < w*h; q++)
-	screen[q] = buffer[q];
+EXPORT void wefx_draw(unsigned int *screen)
+{
+    for (int q = 0; q < w * h; q++)
+        screen[q] = buffer[q];
 }
 
 //////////////////////////////////////////////////////////
-EXPORT int wefx_win_width() {
-	return w;
+EXPORT int wefx_win_width()
+{
+    return w;
 }
-EXPORT int wefx_win_height() {
-	return h;
+EXPORT int wefx_win_height()
+{
+    return h;
 }
 //////////////////////////////////////////////////////////
 
