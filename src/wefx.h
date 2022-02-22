@@ -5,6 +5,9 @@ http://www.nd.edu/~dthain/courses/cse20211/fall2013/gfx
 #ifndef WEFX__H
 #define WEFX__H
 
+#include "walloc.h"
+#include "math.h"
+
 /* Open a new graphics window. */
 void wefx_open(int width, int height, const char *title);
 

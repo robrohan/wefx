@@ -93,11 +93,11 @@ enum chunk_kind
     LARGE_OBJECT = 255
 };
 
-static const uint8_t small_object_granule_sizes[] = {
-#define SMALL_OBJECT_GRANULE_SIZE(i) i,
-    FOR_EACH_SMALL_OBJECT_GRANULES(SMALL_OBJECT_GRANULE_SIZE)
-#undef SMALL_OBJECT_GRANULE_SIZE
-};
+// static const uint8_t small_object_granule_sizes[] = {
+//#define SMALL_OBJECT_GRANULE_SIZE(i) i,
+//    FOR_EACH_SMALL_OBJECT_GRANULES(SMALL_OBJECT_GRANULE_SIZE)
+//#undef SMALL_OBJECT_GRANULE_SIZE
+//};
 
 static enum chunk_kind granules_to_chunk_kind(unsigned granules)
 {

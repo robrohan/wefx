@@ -1,5 +1,5 @@
-#ifndef WALLOC__H
-#define WALLOC__H
+#ifndef WEFX_WALLOC__H
+#define WEFX_WALLOC__H
 
 void *malloc(unsigned long);
 void free(void *);

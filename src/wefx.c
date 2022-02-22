@@ -1,5 +1,6 @@
 #include "walloc.h"
 #include "wasm.h"
+#include "math.h"
 
 typedef unsigned int color;
 
@@ -45,22 +46,59 @@ EXPORT void wefx_clear_color(int red, int green, int blue)
 // Clear the screen with the background color
 EXPORT void wefx_clear()
 {
-    for (int x = 0; x < w; x++)
+    for (int q = 0; q < w * h; q++)
+        buffer[q] = bg_color;
+
+    //    for (int x = 0; x < w; x++)
+    //    {
+    //        for (int y = 0; y < h; y++)
+    //        {
+    //            buffer[x + y * w] = bg_color;
+    //        }
+    //    }
+}
+
+// Draw a line from (x1,y1) to (x2,y2)
+EXPORT void wefx_line(int x0, int y0, int x1, int y1)
+{
+    // Bresenham's line algorithm
+    // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+    int dx = abs(x1 - x0);
+    int sx = x0 < x1 ? 1 : -1;
+    int dy = -abs(y1 - y0);
+    int sy = y0 < y1 ? 1 : -1;
+    int error = dx + dy;
+
+    for (;;)
     {
-        for (int y = 0; y < h; y++)
+        wefx_point(x0, y0);
+        if (x0 == x1 && y0 == y1)
+            break;
+        int e2 = 2 * error;
+        if (e2 >= dy)
         {
-            buffer[x + y * w] = bg_color;
+            if (x0 == x1)
+                break;
+            error = error + dy;
+            x0 = x0 + sx;
+        }
+        if (e2 <= dx)
+        {
+            if (y0 == y1)
+                break;
+            error = error + dx;
+            y0 = y0 + sy;
         }
     }
 }
 
+//////////////////////////////////////////////////////////
 EXPORT void wefx_draw(unsigned int *screen)
 {
     for (int q = 0; q < w * h; q++)
         screen[q] = buffer[q];
 }
 
-//////////////////////////////////////////////////////////
 EXPORT int wefx_win_width()
 {
     return w;
@@ -73,9 +111,6 @@ EXPORT int wefx_win_height()
 
 /* Flush all previous output to the window? */
 // void wefx_flush();
-
-/* Draw a line from (x1,y1) to (x2,y2) */
-// void wefx_line(int x1, int y1, int x2, int y2);
 
 /* Wait for the user to press a key or mouse button. */
 // char wefx_wait();

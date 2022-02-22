@@ -1,6 +1,5 @@
-
-#ifndef DEMO_WASM
-#define DEMO_WASM
+#ifndef WEFX_WASM_H
+#define WEFX_WASM_H
 
 // This is used to flag a function as something that
 // should be accessible in javascript.
