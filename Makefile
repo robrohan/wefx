@@ -14,6 +14,7 @@ about:
 
 clean:
 	rm -f public/wefx.wasm
+	rm -f test
 
 build:
 	$(CC) \

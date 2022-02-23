@@ -1,6 +1,4 @@
-#include "walloc.h"
 #include "wasm.h"
-#include "math.h"
 
 typedef unsigned int color;
 
@@ -48,14 +46,6 @@ EXPORT void wefx_clear()
 {
     for (int q = 0; q < w * h; q++)
         buffer[q] = bg_color;
-
-    //    for (int x = 0; x < w; x++)
-    //    {
-    //        for (int y = 0; y < h; y++)
-    //        {
-    //            buffer[x + y * w] = bg_color;
-    //        }
-    //    }
 }
 
 // Draw a line from (x1,y1) to (x2,y2)
