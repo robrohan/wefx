@@ -18,7 +18,7 @@ build:
 		-Wl,--lto-O3 \
 		-Wl,-z,stack-size=$(STACK_SIZE) \
 		-o public/wefx.wasm \
-		src/walloc.c src/wefx.c src/example.c
+		src/walloc.c src/math.c src/wefx.c src/example.c
 
 start: clean build
 # You probably wont have this: https://github.com/robrohan/busboy
