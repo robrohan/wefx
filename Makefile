@@ -29,9 +29,10 @@ build:
 		-Wl,--lto-O3 \
 		-Wl,-z,stack-size=$(STACK_SIZE) \
 		-o public/wefx.wasm \
-		src/walloc.c src/math.c src/wefx.c src/example.c
+		src/walloc.c src/math.c src/wefx.c src/main.c
 
 serve: clean build
+# XXX: maybe instead do a very simple server in C
 	cd public; python3 -m http.server
 
 test: 
