@@ -2,6 +2,16 @@
 CC=clang
 STACK_SIZE=$$(( 8 * 1024 * 1024 ))
 
+about:
+	@echo ""
+	@echo " wefx "
+	@echo ""
+	@echo "make serve   -  build wasm, and lanuch basic web server"
+	@echo "make clean   -  clean temp files"
+	@echo "make build   -  just build the wasm file"
+	@echo "make test    -  run some basic tests."
+	@echo ""
+
 clean:
 	rm -f public/wefx.wasm
 
@@ -20,10 +30,12 @@ build:
 		-o public/wefx.wasm \
 		src/walloc.c src/math.c src/wefx.c src/example.c
 
-start: clean build
-# You probably wont have this: https://github.com/robrohan/busboy
-# But anything like it will do. e.g. python3 -m http.server
-	busboy --root=public
-
 serve: clean build
 	cd public; python3 -m http.server
+
+test: 
+# add -lm if you want to test against built in math.h
+	clang -std=c99 -m32 \
+		src/math.c src/test.c \
+		-o test
+	./test
