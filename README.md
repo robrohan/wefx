@@ -19,9 +19,10 @@ public directory using a web server. You can then open a web browser and
 view the running code.
 
 You'll need the following programs installed:
-	- clang 
-	- make (optional - MacOS and Linux)
-	- (optional) python3
+
+- clang 
+- make (optional - MacOS and Linux)
+- (optional) python3
 
 On MacOS or Linux these tools should be available already, or easily
 installed with homebrew (`brew`), Apt-get (`apt-get`), or your local package
@@ -46,8 +47,9 @@ file `./public/wefx.wasm`. Once this builds you can serve your creation.
 
 The gist of this is you need to serve the contents of the `/public`
 directory in a web server. You need to do this because the file that loads
-the newly create `wasm` file (`index.html`) can only load the wasm file over
-http. You can not simply open the `index.html` file from your file system.
+the newly create `wasm` file ([index.html](./public/index.html) can only
+load the wasm file over http. You can not simply open the `index.html` file
+from your file system.
 
 If you try to open the `index.html` file directly you will get an error
 like:
@@ -56,15 +58,16 @@ like:
 Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at file:///xxxxx/public/wefx.wasm. (Reason: CORS request not http).
 ```
 
-If you have python3 installed, you can run:
+A basic http server comes with python3, and the make file will run that
+server if you run:
 
 ```
 make serve
 ``` 
 
-and a python based web server will serve the files in the _public_
-directory. You can then use your favourite browser and browse to
-http://localhost:8000 to see the compiled code.
+and the python3 web server will serve the files in the _public_ directory.
+You can then use your favourite browser and browse to http://localhost:8000
+to see the compiled code.
 
 If you already have a favourite server (for example I use
 [busboy](https://github.com/robrohan/busboy)), you can use that serve to
