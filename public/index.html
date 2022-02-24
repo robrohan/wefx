@@ -34,13 +34,13 @@
         	init, 
         	main_loop,
         	wefx_draw,
-        	wefx_win_width,
-        	wefx_win_height,
+        	wefx_xsize,
+        	wefx_ysize,
         } = instance.exports;
 
         init();
-        const width = wefx_win_width();
-        const height = wefx_win_height();
+        const width = wefx_xsize();
+        const height = wefx_ysize();
 	    canvas.width = width;
 	    canvas.height = height;        
         

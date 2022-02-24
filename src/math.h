@@ -19,8 +19,8 @@ float abs(float n);
 float to_radian(float degree);
 float to_degree(float radians);
 
-float floor(float shift);
-float ceil(float shift);
+float floor(float n);
+float ceil(float n);
 float round(float x);
 
 float pow(float x, float y);

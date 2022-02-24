@@ -24,7 +24,7 @@ EXPORT void main_loop(float time)
 
     wefx_color(0, 0xff, 0);
     int x = itime % 640;
-    wefx_point(x, 240 + (cos(x) * 3));
+    wefx_point(x, 240 + cos(time) * 2);
 
     wefx_color(0, 0, 0xff);
     wefx_point(itime % 640, 260);

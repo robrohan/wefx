@@ -1,14 +1,10 @@
 #include "math.h"
 
-//                           s|-exp--||---mantissa----------|
-static int MANTISSA_MASK = 0b00000000011111111111111111111111;
-
 float abs(float n)
 {
-	if(n<0) {
-		return n * -1;
-	}
-	return n;
+    if (n < 0)
+        return n * -1;
+    return n;
 }
 
 float to_radian(float degree)
@@ -21,6 +17,7 @@ float to_degree(float radian)
     return radian * (180 / M_PI);
 }
 
+// XXX: Is there a better way to do this?
 float pow(float x, float y)
 {
     float rtn = x;
@@ -32,42 +29,41 @@ float pow(float x, float y)
     return rtn;
 }
 
-// XXX: Could be better
-float floor(float shift)
+float floor(float n)
 {
-	if(shift < 0)
-	    return (float)((int)(shift + 0.5));
-	else
-	    return (float)((int)(shift - 0.5));
+    float base = (float)(int)(n - ((int)n % 1));
+    if (n < 0)
+        return base - 1;
+    return base;
 }
 
-float ceil(float shift)
+float ceil(float n)
 {
-	if(shift < 0)
-	    return (float)((int)(shift - 0.5));
-	else 
-	    return (float)((int)(shift + 0.5));
+    float base = (float)(int)(n - ((int)n % 1));
+    if (n > 0)
+        return base + 1;
+    return base;
 }
 
-// XXX: This is pretty rough.
 float round(float x)
 {
-    float mantissa = (float) ((int)x & MANTISSA_MASK);
-    if (mantissa < 0.5)
+    float m = x - (int)x;
+    if (m < 0.5)
         return floor(x);
-    else
-        return ceil(x);
+    return ceil(x);
 }
 
-float cos(float x) 
+// XXX: Simplify?
+float cos(float x)
 {
-	float p = x / (2. * M_PI);
-	float r = p - .25 - floor(p + .25);
-	float y = r * 16 * (abs(r) - 0.5);
-	return y;
+    float p = x / (2. * M_PI);
+    float r = p - .25 - floor(p + .25);
+    float y = r * 16 * (abs(r) - 0.5);
+    return y;
 }
 
+// XXX: Remove the division?
 float sin(float x)
 {
-	return cos(x - (M_PI / 2));
+    return cos(x - (M_PI / 2));
 }

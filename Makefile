@@ -2,6 +2,8 @@
 CC=clang
 STACK_SIZE=$$(( 8 * 1024 * 1024 ))
 
+NO_BUILT_INS=-fno-builtin-sin -fno-builtin-cos -fno-builtin-pow -fno-builtin-round -fno-builtin-ceil -fno-builtin-floor -fno-builtin-abs -fno-builtin-malloc
+
 about:
 	@echo ""
 	@echo " wefx "
@@ -28,8 +30,11 @@ build:
 		-Wl,--no-entry \
 		-Wl,--lto-O3 \
 		-Wl,-z,stack-size=$(STACK_SIZE) \
+		$(NO_BUILT_INS) \
 		-o public/wefx.wasm \
 		src/walloc.c src/math.c src/wefx.c src/main.c
+
+
 
 serve: clean build
 # XXX: maybe instead do a very simple server in C
@@ -37,7 +42,8 @@ serve: clean build
 
 test: 
 # add -lm if you want to test against built in math.h
-	clang -std=c99 -m32 \
+	clang -std=c99 -m32 -g \
+		$(NO_BUILT_INS) \
 		src/math.c src/test.c \
 		-o test
 	./test

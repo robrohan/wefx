@@ -10,7 +10,7 @@ color bg_color = 0;
 int w = 0;
 int h = 0;
 
-EXPORT void wefx_open(int width, int height, const char *title)
+void wefx_open(int width, int height, const char *title)
 {
     w = width;
     h = height;
@@ -24,32 +24,32 @@ int rgb_to_int(int red, int green, int blue)
 }
 
 // Change the current foreground drawing color.
-EXPORT void wefx_color(int red, int green, int blue)
+void wefx_color(int red, int green, int blue)
 {
     fg_color = rgb_to_int(red, green, blue);
 }
 
 // draw a point at x y using the current colour
-EXPORT void wefx_point(int x, int y)
+void wefx_point(int x, int y)
 {
     buffer[x + y * w] = fg_color;
 }
 
 // Change the current background color.
-EXPORT void wefx_clear_color(int red, int green, int blue)
+void wefx_clear_color(int red, int green, int blue)
 {
     bg_color = rgb_to_int(red, green, blue);
 }
 
 // Clear the screen with the background color
-EXPORT void wefx_clear()
+void wefx_clear()
 {
     for (int q = 0; q < w * h; q++)
         buffer[q] = bg_color;
 }
 
 // Draw a line from (x1,y1) to (x2,y2)
-EXPORT void wefx_line(int x0, int y0, int x1, int y1)
+void wefx_line(int x0, int y0, int x1, int y1)
 {
     // Bresenham's line algorithm
     // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
@@ -89,11 +89,12 @@ EXPORT void wefx_draw(unsigned int *screen)
         screen[q] = buffer[q];
 }
 
-EXPORT int wefx_win_width()
+/* Return the X and Y dimensions of the window. */
+EXPORT int wefx_xsize()
 {
     return w;
 }
-EXPORT int wefx_win_height()
+EXPORT int wefx_ysize()
 {
     return h;
 }
@@ -108,10 +109,6 @@ EXPORT int wefx_win_height()
 /* Return the X and Y coordinates of the last event. */
 // int wefx_xpos();
 // int wefx_ypos();
-
-/* Return the X and Y dimensions of the window. */
-// int wefx_xsize();
-// int wefx_ysize();
 
 /* Check to see if an event is waiting. */
 // int wefx_event_waiting();
