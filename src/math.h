@@ -6,13 +6,16 @@
 #endif
 
 #ifndef M_PI
-
+// clang-format off
 #define M_PI     3.141592653589
 #define M_PI2    6.283185307179
 #define M_PI_SQR 9.869604401089
 #define M_PID2   1.570796326794
-
+// clang-format on
 #endif
+
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 float abs(float n);
 
@@ -27,5 +30,8 @@ float pow(float x, float y);
 
 float cos(float x);
 float sin(float x);
+
+int rand(void);
+void srand(unsigned int seed);
 
 #endif // WEFX_MATH__H

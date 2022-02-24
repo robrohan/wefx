@@ -1,5 +1,11 @@
 #include "math.h"
 
+// Params for the random number generator (lcg below)
+// See this paper for more info:
+// https://epub.wu.ac.at/1288/1/document.pdf
+#define RND_2_31_MINUS_ONE 2147483647
+#define RND_PARK_MILLER 16807
+
 float abs(float n)
 {
     if (n < 0)
@@ -56,7 +62,7 @@ float round(float x)
 // XXX: Simplify?
 float cos(float x)
 {
-    float p = x / (2. * M_PI);
+    float p = x / M_PI2;
     float r = p - .25 - floor(p + .25);
     float y = r * 16 * (abs(r) - 0.5);
     return y;
@@ -65,5 +71,32 @@ float cos(float x)
 // XXX: Remove the division?
 float sin(float x)
 {
-    return cos(x - (M_PI / 2));
+    return cos(x - M_PID2);
+}
+
+static unsigned int SEED = 9035768;
+void srand(unsigned int seed)
+{
+    SEED = seed;
+}
+
+/**
+ * Very basic random number generator. Linear
+ * congruential generator
+ *
+ * If the increment (inc) = 0, the generator is a
+ * multiplicative congruential generator (MCG)
+ *
+ * If inc != 0, the method is called a mixed
+ * congruential generator.
+ */
+int lcg(int md, int mult, int inc, int seed)
+{
+    SEED = (mult * seed + inc) % md;
+    return SEED;
+}
+
+int rand()
+{
+    return lcg(RND_2_31_MINUS_ONE, RND_PARK_MILLER, 0, SEED);
 }
