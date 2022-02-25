@@ -85,8 +85,8 @@ void wefx_line(int x0, int y0, int x1, int y1)
 //////////////////////////////////////////////////////////
 EXPORT void wefx_draw(unsigned int *screen)
 {
-    for (int q = 0; q < w * h; q++)
-        screen[q] = buffer[q];
+	for (int q = 0; q < w * h; q++)
+    	screen[q] = buffer[q];
 }
 
 /* Return the X and Y dimensions of the window. */

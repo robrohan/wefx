@@ -52,14 +52,13 @@
         );
         
         let start = Date.now();
+        const image = new ImageData(imgArray, width);
         const loop = (t) => {
           const current = Date.now();
           const delta = current - start;
           
           main_loop(delta * 0.05)
           wefx_draw(offset);
-          
-          const image = new ImageData(imgArray, width);
           ctx.putImageData(image, 0, 0);
 
           requestAnimationFrame(loop);
