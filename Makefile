@@ -2,7 +2,7 @@
 CC=clang
 STACK_SIZE=$$(( 8 * 1024 * 1024 ))
 
-NO_BUILT_INS=-fno-builtin-sin -fno-builtin-cos -fno-builtin-pow -fno-builtin-round -fno-builtin-ceil -fno-builtin-floor -fno-builtin-abs -fno-builtin-malloc
+NO_BUILT_INS=-fno-builtin-sin -fno-builtin-cos -fno-builtin-pow -fno-builtin-round -fno-builtin-ceil -fno-builtin-floor -fno-builtin-abs -fno-builtin-malloc -fno-builtin-rand -fno-builtin-srand
 
 about:
 	@echo ""
