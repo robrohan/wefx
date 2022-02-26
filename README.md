@@ -2,7 +2,13 @@
 
 Status: In Progress
 
-Wefx is a graphics library for drawing simple things using C, wasm, and an HTML canvas. It aims to be similar to [gfx][gfx]. It is meant to be a teaching / learning tool for C and graphics. This is not using OpenGL or anything heavy like that. It is doing very basic pixel manipulation and will have very simple functions to draw pixels and lines.
+Wefx is a graphics library for drawing simple things using C, wasm, and an
+HTML canvas. It aims to be similar to [gfx][gfx]. It is meant to be a
+teaching / learning tool for C and graphics. This is not using OpenGL or
+anything heavy like that. It is doing very basic pixel manipulation and will
+have very simple functions to draw pixels and lines.
+
+[Video of the project in action](https://www.youtube.com/watch?v=vrqixVOd-rc)
 
 ![Example Screenshot](./public/wefx_shot.png)
 
