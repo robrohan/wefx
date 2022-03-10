@@ -59,21 +59,28 @@ float round(float x)
     return ceil(x);
 }
 
-// XXX: Simplify?
+// Handmade cosine - this is magic.
 float cos(float x)
 {
+	// the curve we're going to use to emulate cos
     float p = x / M_PI2;
+    // recursively split the line and tilt it so the
+    // our fake wave starts and stops at about the right
+    // place
     float r = p - .25 - floor(p + .25);
+    // now put it together and make sure the ends touch
     float y = r * 16 * (abs(r) - 0.5);
     return y;
 }
 
-// XXX: Remove the division?
+// Sin is just cos shifted on the x axis
+// sin(x) = cos(x - π÷2)
 float sin(float x)
 {
     return cos(x - M_PID2);
 }
 
+// Default seed if they don't provide one
 static unsigned int SEED = 9035768;
 void srand(unsigned int seed)
 {
@@ -90,7 +97,7 @@ void srand(unsigned int seed)
  * If inc != 0, the method is called a mixed
  * congruential generator.
  */
-int lcg(int md, int mult, int inc, int seed)
+static int lcg(int md, int mult, int inc, int seed)
 {
     SEED = (mult * seed + inc) % md;
     return SEED;

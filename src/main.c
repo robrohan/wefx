@@ -24,20 +24,22 @@ EXPORT void main_loop(float time)
 {
     int itime = (int)time;
     wefx_clear();
-
-    wefx_color(0xff, 0, 0);
-    wefx_point(itime % W, (H / 2) - 20);
-
-    wefx_color(0, 0xff, 0);
+    
     int x = itime % W;
     wefx_point(x, (H / 2) + cos(time) * 2);
-    for (int i = 0; i < 100; i++)
+
+    for (int i = 0; i < 130; i++)
     {
-        wefx_point(x - i, (H / 2) + cos(time - i) * (2 + i));
+	    wefx_color(0xff, 0, 0);
+    	wefx_point(x - i, ((H /2) + sin(time - i) * 3) - 20);
+    
+  	    wefx_color(0, 0xff, 0);
+        wefx_point(x - i, (H / 2) + cos(time - i) * 2);
+        
+        wefx_color(0, 0, 0xff);
+		wefx_point(x - i, ((H / 2) + sin(time -i) * 3) + 20);
     }
 
-    wefx_color(0, 0, 0xff);
-    wefx_point(itime % W, (H / 2) + 20);
 
     wefx_color(0xff, 0xff, 0xff);
     wefx_line(0, 0, W, H);
