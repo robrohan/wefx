@@ -3,6 +3,4 @@
 *.wasm
 *.bak
 
-test.c
 test
-a.out

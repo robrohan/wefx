@@ -38,16 +38,17 @@ build:
 		-o public/wefx.wasm \
 		src/walloc.c src/math.c src/wefx.c src/main.c
 
-
-
 serve: clean build
 # XXX: maybe instead do a very simple server in C
 	cd public; python3 -m http.server
 
-test: 
+clean_test:
+	rm -f test
+
+test: clean_test
 # add -lm if you want to test against built in math.h
 	clang -std=c99 -m32 -g \
 		$(NO_BUILT_INS) \
-		src/math.c src/test.c \
+		src/math.c src/wefx.c src/test.c \
 		-o test
 	./test

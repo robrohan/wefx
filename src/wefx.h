@@ -8,6 +8,52 @@ http://www.nd.edu/~dthain/courses/cse20211/fall2013/gfx
 #include "walloc.h"
 #include "math.h"
 
+#ifndef NULL
+	#define NULL ((void *)0)
+#endif
+
+enum wefx_button_type {
+	WEFX_NONE = 0,
+	WEFX_LEFT,
+	WEFX_RIGHT,
+};
+
+enum wefx_event_type {
+	WEFX_KEYDOWN = 0,
+	WEFX_KEYPRESS,
+	WEFX_KEYUP,
+	WEFX_MOUSEMOVE,
+	WEFX_MOUSEDOWN,
+	WEFX_MOUSEUP,
+	WEFX_CLICK
+};
+
+typedef struct wefx_event {
+	enum wefx_event_type type;
+	enum wefx_button_type button;
+	char key;                      // TODO: this wont work with utf8
+	                               // keyCode is deprecated in javascript
+	int timestamp;
+	int x;
+	int y;
+} wefx_event;
+
+typedef struct wefx_event_node {
+	struct wefx_event *event;
+	struct wefx_event_node *next;
+} wefx_event_node;
+
+typedef struct wefx_event_queue {
+	wefx_event_node *head;
+	wefx_event_node *tail;
+} wefx_event_queue;
+
+void wefx_init_queue(wefx_event_queue *q);
+
+int wefx_enqueue(wefx_event_queue *q, wefx_event* event);
+
+wefx_event_node* wefx_dequeue(wefx_event_queue *q);
+
 /* Open a new graphics window. */
 void wefx_open(int width, int height, const char *title);
 
@@ -30,8 +76,8 @@ void wefx_clear_color(int red, int green, int blue);
 // char wefx_wait();
 
 /* Return the X and Y coordinates of the last event. */
-int wefx_xpos();
-int wefx_ypos();
+// int wefx_xpos();
+// int wefx_ypos();
 
 /* Return the X and Y dimensions of the window. */
 int wefx_xsize();
@@ -39,8 +85,5 @@ int wefx_ysize();
 
 /* Check to see if an event is waiting. */
 // int wefx_event_waiting();
-
-/* Flush all previous output to the window. */
-void wefx_flush();
 
 #endif // WEFX__H

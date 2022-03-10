@@ -1,4 +1,5 @@
 #include "wasm.h"
+#include "wefx.h"
 
 typedef unsigned int color;
 
@@ -81,6 +82,45 @@ void wefx_line(int x0, int y0, int x1, int y1)
         }
     }
 }
+
+//////////////////////////////////////////////////////////
+// Event Queue
+void wefx_init_queue(wefx_event_queue *q)
+{
+	q->head = NULL;
+	q->tail = NULL;
+}
+
+int wefx_enqueue(wefx_event_queue *q, wefx_event* event)
+{
+	// create a new node to store the event
+	wefx_event_node *node = malloc(sizeof(wefx_event_node));
+	if(node == NULL) return -1;
+	
+	node->event = event;
+	node->next = NULL;
+	
+	// if the queue has a tail, add us as the next behind the tail
+	if(q->tail != NULL) {
+		q->tail->next = node;
+	}
+	// now really make us the last node
+	q->tail = node;
+	
+	// if we are first in line, go to the head
+	if (q->head == NULL) {
+		q->head = node;
+	}
+
+	return 1;
+}
+
+wefx_event_node* wefx_dequeue(wefx_event_queue *q)
+{
+	return NULL;
+}
+
+//////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
 EXPORT void wefx_draw(unsigned int *screen)
