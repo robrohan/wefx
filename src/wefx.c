@@ -1,5 +1,5 @@
-#include "wasm.h"
 #include "wefx.h"
+#include "wasm.h"
 
 typedef unsigned int color;
 
@@ -11,11 +11,14 @@ static color bg_color = 0;
 static int w = 0;
 static int h = 0;
 
+wefx_event_queue* wefx_q = NULL;
+
 void wefx_open(int width, int height, const char *title)
 {
     w = width;
     h = height;
     buffer = malloc(w * h * sizeof(int));
+    wefx_q = malloc(sizeof(struct wefx_event_queue));
 }
 
 int rgb_to_int(int red, int green, int blue)
@@ -85,41 +88,70 @@ void wefx_line(int x0, int y0, int x1, int y1)
 
 //////////////////////////////////////////////////////////
 // Event Queue
+
+EXPORT void wefx_add_queue_event(int type, int button, int timestamp, int key, int x, int y)
+{
+	wefx_event *e = malloc(sizeof(struct wefx_event));
+	e->type = type;
+	e->button = button;
+	e->timestamp = timestamp;
+	e->key = (char)key;
+	e->x = x;
+	e->y = y;
+
+	wefx_enqueue(wefx_q, e);
+}
+
 void wefx_init_queue(wefx_event_queue *q)
 {
-	q->head = NULL;
-	q->tail = NULL;
+    q->head = NULL;
+    q->tail = NULL;
 }
 
-int wefx_enqueue(wefx_event_queue *q, wefx_event* event)
+int wefx_enqueue(wefx_event_queue *q, wefx_event *event)
 {
-	// create a new node to store the event
-	wefx_event_node *node = malloc(sizeof(wefx_event_node));
-	if(node == NULL) return -1;
-	
-	node->event = event;
-	node->next = NULL;
-	
-	// if the queue has a tail, add us as the next behind the tail
-	if(q->tail != NULL) {
-		q->tail->next = node;
-	}
-	// now really make us the last node
-	q->tail = node;
-	
-	// if we are first in line, go to the head
-	if (q->head == NULL) {
-		q->head = node;
-	}
+    // create a new node to store the event
+    wefx_event_node *node = malloc(sizeof(struct wefx_event_node));
+    if (node == NULL)
+        return -1;
 
-	return 1;
+    node->event = event;
+    node->next = NULL;
+
+    // if the queue has a tail, add us as the next behind the tail
+    if (q->tail != NULL)
+    {
+        q->tail->next = node;
+    }
+    // now really make us the last node
+    q->tail = node;
+
+    // if we are first in line, go to the head
+    if (q->head == NULL)
+    {
+        q->head = node;
+    }
+
+    return 1;
 }
 
-wefx_event_node* wefx_dequeue(wefx_event_queue *q)
+wefx_event *wefx_dequeue(wefx_event_queue *q)
 {
-	return NULL;
-}
+    if (q->head == NULL)
+        return NULL;
 
+    wefx_event_node *n = q->head;
+    wefx_event *e = n->event;
+
+    q->head = q->head->next;
+    if (q->head == NULL)
+    {
+        q->tail = NULL;
+    }
+	
+	free(n);
+    return e;
+}
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////

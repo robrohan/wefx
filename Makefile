@@ -1,6 +1,7 @@
 
 CC=clang
-STACK_SIZE=$$(( 8 * 1024 * 1024 ))
+# STACK_SIZE=$$(( 8 * 1024 * 1024 ))
+STACK_SIZE=$$(( 8 * 1024 ))
 
 NO_BUILT_INS=-fno-builtin-sin -fno-builtin-cos \
 	-fno-builtin-ceil -fno-builtin-floor \
@@ -28,7 +29,7 @@ build:
 		-std=c99 \
 		-Wall \
 		-g \
-		-O3 -flto \
+		-Os -flto \
 		-nostdlib \
 		-Wl,--export-dynamic \
 		-Wl,--no-entry \

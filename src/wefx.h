@@ -52,7 +52,7 @@ void wefx_init_queue(wefx_event_queue *q);
 
 int wefx_enqueue(wefx_event_queue *q, wefx_event* event);
 
-wefx_event_node* wefx_dequeue(wefx_event_queue *q);
+wefx_event* wefx_dequeue(wefx_event_queue *q);
 
 /* Open a new graphics window. */
 void wefx_open(int width, int height, const char *title);

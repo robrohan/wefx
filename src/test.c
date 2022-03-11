@@ -18,6 +18,7 @@ int main()
 
     // Simple math tests
     {
+        printf("---------------------------\n");
         printf("abs: %f\n", abs(10));
         printf("abs: %f\n", abs(-399));
         printf("abs: %f\n", abs(-123.456));
@@ -37,7 +38,6 @@ int main()
         printf("---------------------------\n");
         printf("2rad: %f\n", to_radian(30));
         printf("2deg: %f\n", to_degree(M_PI / 2));
-        printf("---------------------------\n");
     }
 
     // Simple sin, cos tests
@@ -51,7 +51,6 @@ int main()
         printf("0.951106 == %f\n", cos(0.314000));
         // The value of sin(0.314000) : 0.308866)
         printf("0.308866 == %f\n", sin(0.314000));
-        printf("---------------------------\n");
     }
 
     // Simple rand tests
@@ -72,11 +71,12 @@ int main()
 
     // Simple queue tests
     {
-        struct wefx_event_queue q;
+        printf("---------------------------\n");
+        wefx_event_queue q;
         wefx_init_queue(&q);
-        printf("head: %#010x; tail: %#010x (should be zero)\n", q.head, q.tail);
+        printf("head: %#010x; tail: %#010x (should be zero)\n", (unsigned int)q.head, (unsigned int)q.tail);
 
-        struct wefx_event e0 = {
+        wefx_event e0 = {
             .type = WEFX_CLICK,
             .button = WEFX_RIGHT,
             .timestamp = 123456,
@@ -85,9 +85,9 @@ int main()
         };
 
         wefx_enqueue(&q, &e0);
-        printf("head: %#010x; tail: %#010x (should be equal)\n", q.head, q.tail);
+        printf("head: %#010x; tail: %#010x (should be equal)\n", (unsigned int)q.head, (unsigned int)q.tail);
 
-        struct wefx_event e1 = {
+        wefx_event e1 = {
             .type = WEFX_MOUSEMOVE,
             .timestamp = 123458,
             .x = 10,
@@ -95,7 +95,13 @@ int main()
         };
 
         wefx_enqueue(&q, &e1);
-        printf("head: %#010x; tail: %#010x (should be different)\n", q.head, q.tail);
+        printf("head: %#010x; tail: %#010x (should be different)\n", (unsigned int)q.head, (unsigned int)q.tail);
         printf("h: %d; t: %d (should be different)\n", q.head->event->type, q.tail->event->type);
+
+        wefx_event *e9 = wefx_dequeue(&q);
+
+        printf("head: %#010x; tail: %#010x (should be different)\n", (unsigned int)q.head, (unsigned int)q.tail);
+        printf("h: %d; t: %d (should be the same now)\n", q.head->event->type, q.tail->event->type);
+        printf("dequeued: %d\n", e9->type);
     }
 }
