@@ -1,8 +1,6 @@
 #include "wasm.h"
 #include "wefx.h"
 
-extern wefx_event_queue *wefx_q;
-
 /*
  * - the top-left is (0,0) and the pixel coordinates increase
  * in the right and down directions
@@ -12,18 +10,35 @@ extern wefx_event_queue *wefx_q;
 #define W 1024
 #define H 768
 
+// This is a handle to the event queue from the browser
+// TODO: not super happy with this, but passing a poitner
+// back from wefx to the queue just crashes the browser
+// need some better debug tools.
+extern wefx_event_queue *wefx_q;
+
 // Called once at startup
-EXPORT void init()
+EXPORT int init()
 {
-    wefx_open(W, H, "Test Window");
+    // Open a "window"
+    int err = wefx_open(W, H, "Test Window");
+    if (err)
+        return 1;
+
+    // enable mouse and keyboard events
+    wefx_event_queue *queue = wefx_open_events();
+    if (queue == NULL)
+        return 1;
+
     wefx_clear_color(0x00, 0x00, 0x00);
     wefx_clear();
     srand(9999991);
+
+    return 0;
 }
 
+// Handle input each frame
 void input(int time)
 {
-    // handle all input
     // we need to at least drain the event queue
     // or we'll evenutally run out of memory
     wefx_event *e = wefx_dequeue(wefx_q);
@@ -41,8 +56,8 @@ void input(int time)
             }
             break;
         }
-        // kind of dodgy, but javascript creates this
-        // when it makes the event so we need to free it.
+        // Dodgy, but javascript creates this when it makes
+        // the event so we need to free the event here.
         free(e);
 
         // grab the next item in the queue
@@ -50,6 +65,7 @@ void input(int time)
     }
 }
 
+// Draw to our screen buffer
 void draw(int time)
 {
     wefx_clear();

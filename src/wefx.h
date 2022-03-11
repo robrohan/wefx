@@ -48,14 +48,20 @@ typedef struct wefx_event_queue {
 	wefx_event_node *tail;
 } wefx_event_queue;
 
+//////////////////////////////////////////////
+
+wefx_event_queue *wefx_open_events();
+
 void wefx_init_queue(wefx_event_queue *q);
 
 int wefx_enqueue(wefx_event_queue *q, wefx_event* event);
 
 wefx_event* wefx_dequeue(wefx_event_queue *q);
 
+//////////////////////////////////////////////
+
 /* Open a new graphics window. */
-void wefx_open(int width, int height, const char *title);
+int wefx_open(int width, int height, const char *title);
 
 /* Draw a point at (x,y) */
 void wefx_point( int x, int y );

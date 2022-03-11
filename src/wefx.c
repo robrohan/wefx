@@ -11,14 +11,18 @@ static color bg_color = 0;
 static int w = 0;
 static int h = 0;
 
-wefx_event_queue* wefx_q = NULL;
+wefx_event_queue *wefx_q = NULL;
 
-void wefx_open(int width, int height, const char *title)
+int wefx_open(int width, int height, const char *title)
 {
     w = width;
     h = height;
     buffer = malloc(w * h * sizeof(int));
-    wefx_q = malloc(sizeof(struct wefx_event_queue));
+    if (buffer == NULL)
+    {
+        return 1;
+    }
+    return 0;
 }
 
 int rgb_to_int(int red, int green, int blue)
@@ -89,25 +93,40 @@ void wefx_line(int x0, int y0, int x1, int y1)
 
 //////////////////////////////////////////////////////////
 // Event Queue
+wefx_event_queue *wefx_open_events()
+{
+    wefx_q = malloc(sizeof(struct wefx_event_queue));
+    if (wefx_q != NULL)
+    {
+        wefx_init_queue(wefx_q);
+        return wefx_q;
+    }
+
+    return NULL;
+}
 
 EXPORT void wefx_add_queue_event(int type, int button, int timestamp, int key, int x, int y)
 {
+    // if we don't care about events drop everything
+    if (wefx_q == NULL)
+        return;
 
-	wefx_event *e = malloc(sizeof(struct wefx_event));
-	if(e == NULL) {
-		// we couldn't create memory for some reason
-		// this seems to happen a bit when running in
-		// wasm (or maybe walloc)
-		return;
-	}
-	e->type = type;
-	e->button = button;
-	e->timestamp = timestamp;
-	e->key = (char)key;
-	e->x = x;
-	e->y = y;
+    wefx_event *e = malloc(sizeof(struct wefx_event));
+    if (e == NULL)
+    {
+        // we couldn't create memory for some reason
+        // this seems to happen a bit when running in
+        // wasm (or maybe walloc)
+        return;
+    }
+    e->type = type;
+    e->button = button;
+    e->timestamp = timestamp;
+    e->key = (char)key;
+    e->x = x;
+    e->y = y;
 
-	wefx_enqueue(wefx_q, e);
+    wefx_enqueue(wefx_q, e);
 }
 
 void wefx_init_queue(wefx_event_queue *q)
@@ -120,7 +139,8 @@ int wefx_enqueue(wefx_event_queue *q, wefx_event *event)
 {
     // create a new node to store the event
     wefx_event_node *node = malloc(sizeof(struct wefx_event_node));
-    if (node == NULL) {
+    if (node == NULL)
+    {
         return -1;
     }
 
@@ -146,7 +166,11 @@ int wefx_enqueue(wefx_event_queue *q, wefx_event *event)
 
 wefx_event *wefx_dequeue(wefx_event_queue *q)
 {
-    if (q->head == NULL) {
+    if (q == NULL)
+        return NULL;
+
+    if (q->head == NULL)
+    {
         return NULL;
     }
 
@@ -157,11 +181,10 @@ wefx_event *wefx_dequeue(wefx_event_queue *q)
     {
         q->tail = NULL;
     }
-	
-	free(n);
+
+    free(n);
     return e;
 }
-//////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
 EXPORT void wefx_draw(unsigned int *screen)
@@ -179,17 +202,3 @@ EXPORT int wefx_ysize()
 {
     return h;
 }
-//////////////////////////////////////////////////////////
-
-/* Flush all previous output to the window? */
-// void wefx_flush();
-
-/* Wait for the user to press a key or mouse button. */
-// char wefx_wait();
-
-/* Return the X and Y coordinates of the last event. */
-// int wefx_xpos();
-// int wefx_ypos();
-
-/* Check to see if an event is waiting. */
-// int wefx_event_waiting();

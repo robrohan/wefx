@@ -53,7 +53,11 @@
             wefx_add_queue_event,
         } = instance.exports;
 
-        init();
+        const err = init();
+        if(err) {
+        	console.error("Init failed");
+        	return;
+        }
         const width = wefx_xsize();
         const height = wefx_ysize();
 	    canvas.width = width;
