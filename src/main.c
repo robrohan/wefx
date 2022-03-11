@@ -41,7 +41,6 @@ void input(int time)
             }
             break;
         }
-
         // kind of dodgy, but javascript creates this
         // when it makes the event so we need to free it.
         free(e);

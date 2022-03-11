@@ -56,6 +56,7 @@ void wefx_clear()
 void wefx_line(int x0, int y0, int x1, int y1)
 {
     // Bresenham's line algorithm
+    // read more here:
     // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
     int dx = abs(x1 - x0);
     int sx = x0 < x1 ? 1 : -1;
@@ -91,7 +92,14 @@ void wefx_line(int x0, int y0, int x1, int y1)
 
 EXPORT void wefx_add_queue_event(int type, int button, int timestamp, int key, int x, int y)
 {
+
 	wefx_event *e = malloc(sizeof(struct wefx_event));
+	if(e == NULL) {
+		// we couldn't create memory for some reason
+		// this seems to happen a bit when running in
+		// wasm (or maybe walloc)
+		return;
+	}
 	e->type = type;
 	e->button = button;
 	e->timestamp = timestamp;
@@ -112,8 +120,9 @@ int wefx_enqueue(wefx_event_queue *q, wefx_event *event)
 {
     // create a new node to store the event
     wefx_event_node *node = malloc(sizeof(struct wefx_event_node));
-    if (node == NULL)
+    if (node == NULL) {
         return -1;
+    }
 
     node->event = event;
     node->next = NULL;
@@ -137,12 +146,12 @@ int wefx_enqueue(wefx_event_queue *q, wefx_event *event)
 
 wefx_event *wefx_dequeue(wefx_event_queue *q)
 {
-    if (q->head == NULL)
+    if (q->head == NULL) {
         return NULL;
+    }
 
     wefx_event_node *n = q->head;
     wefx_event *e = n->event;
-
     q->head = q->head->next;
     if (q->head == NULL)
     {
