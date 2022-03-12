@@ -10,7 +10,7 @@ have very simple functions to draw pixels and lines.
 
 [Video of the project in action](https://www.youtube.com/watch?v=vrqixVOd-rc)
 
-![Example Screenshot](./public/wefx_shot.png)
+![Example Screenshot](./docs/wefx_shot.png)
 
 ## Using The Project
 

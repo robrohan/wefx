@@ -1,5 +1,5 @@
-#include "wasm.h"
-#include "wefx.h"
+#include "../src/wasm.h"
+#include "../src/wefx.h"
 
 /*
  * - the top-left is (0,0) and the pixel coordinates increase

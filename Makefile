@@ -20,10 +20,12 @@ about:
 	@echo ""
 
 clean:
-	rm -f public/wefx.wasm
+	rm -rf build
+#	rm -f public/wefx.wasm
 	rm -f test
 
 build:
+	mkdir -p build
 	$(CC) \
 		--target=wasm32 \
 		-std=c99 \
@@ -36,12 +38,12 @@ build:
 		-Wl,--lto-O3 \
 		-Wl,-z,stack-size=$(STACK_SIZE) \
 		$(NO_BUILT_INS) \
-		-o public/wefx.wasm \
-		src/walloc.c src/math.c src/wefx.c src/main.c
+		-o build/wefx.wasm \
+		src/walloc.c src/math.c src/wefx.c examples/main.c
+	cp public/index.html build/index.html
 
 serve: clean build
-# XXX: maybe instead do a very simple server in C
-	cd public; python3 -m http.server
+	cd build; python3 -m http.server
 
 clean_test:
 	rm -f test
@@ -51,5 +53,5 @@ test: clean_test
 	clang -std=c99 -m32 -g \
 		$(NO_BUILT_INS) \
 		src/math.c src/wefx.c src/test.c \
-		-o test
-	./test
+		-o build/test
+	./build/test
