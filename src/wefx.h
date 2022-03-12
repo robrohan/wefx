@@ -5,47 +5,52 @@ http://www.nd.edu/~dthain/courses/cse20211/fall2013/gfx
 #ifndef WEFX__H
 #define WEFX__H
 
-#include "walloc.h"
 #include "math.h"
+#include "walloc.h"
 
 #ifndef NULL
-	#define NULL ((void *)0)
+#define NULL ((void *)0)
 #endif
 
-enum wefx_button_type {
-	WEFX_NONE = 0,
-	WEFX_LEFT,
-	WEFX_RIGHT,
+enum wefx_button_type
+{
+    WEFX_NONE = 0,
+    WEFX_LEFT,
+    WEFX_RIGHT,
 };
 
-enum wefx_event_type {
-	WEFX_KEYDOWN = 0,
-	WEFX_KEYPRESS,
-	WEFX_KEYUP,
-	WEFX_MOUSEMOVE,
-	WEFX_MOUSEDOWN,
-	WEFX_MOUSEUP,
-	WEFX_CLICK
+enum wefx_event_type
+{
+    WEFX_KEYDOWN = 0,
+    WEFX_KEYPRESS = 1,
+    WEFX_KEYUP = 2,
+    WEFX_MOUSEMOVE = 3,
+    WEFX_MOUSEDOWN = 4,
+    WEFX_MOUSEUP = 5,
+    WEFX_CLICK = 6
 };
 
-typedef struct wefx_event {
-	enum wefx_event_type type;
-	enum wefx_button_type button;
-	char key;                      // TODO: this wont work with utf8
-	                               // keyCode is deprecated in javascript
-	int timestamp;
-	int x;
-	int y;
+typedef struct wefx_event
+{
+    enum wefx_event_type type;
+    enum wefx_button_type button;
+    char key; // TODO: this wont work with utf8
+              // keyCode is deprecated in javascript
+    int timestamp;
+    int x;
+    int y;
 } wefx_event;
 
-typedef struct wefx_event_node {
-	struct wefx_event *event;
-	struct wefx_event_node *next;
+typedef struct wefx_event_node
+{
+    struct wefx_event *event;
+    struct wefx_event_node *next;
 } wefx_event_node;
 
-typedef struct wefx_event_queue {
-	wefx_event_node *head;
-	wefx_event_node *tail;
+typedef struct wefx_event_queue
+{
+    wefx_event_node *head;
+    wefx_event_node *tail;
 } wefx_event_queue;
 
 //////////////////////////////////////////////
@@ -54,9 +59,9 @@ wefx_event_queue *wefx_open_events();
 
 void wefx_init_queue(wefx_event_queue *q);
 
-int wefx_enqueue(wefx_event_queue *q, wefx_event* event);
+int wefx_enqueue(wefx_event_queue *q, wefx_event *event);
 
-wefx_event* wefx_dequeue(wefx_event_queue *q);
+wefx_event *wefx_dequeue(wefx_event_queue *q);
 
 //////////////////////////////////////////////
 
@@ -64,7 +69,7 @@ wefx_event* wefx_dequeue(wefx_event_queue *q);
 int wefx_open(int width, int height, const char *title);
 
 /* Draw a point at (x,y) */
-void wefx_point( int x, int y );
+void wefx_point(int x, int y);
 
 /* Draw a line from (x1,y1) to (x2,y2) */
 void wefx_line(int x1, int y1, int x2, int y2);
