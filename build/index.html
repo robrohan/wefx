@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      body {
+      	background-color: #cfcfcf;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .wrapper {
+        display: flex;
+        align-items: center;
+        height: 100vh;
+        justify-content: center;
+      }
+    </style>
+
+    <script type="module">
+      // TODO: export from C?
+	  const WEFX_KEYDOWN = 0;
+	  const WEFX_KEYPRESS = 1;
+	  const WEFX_KEYUP = 2;
+	  const WEFX_MOUSEMOVE = 3;
+	  const WEFX_MOUSEDOWN = 4;
+	  const WEFX_MOUSEUP = 5;
+	  const WEFX_CLICK = 6;
+
+      const SIZE_OF_INT = 4;
+      const canvas = document.getElementById("screenCanvas");
+      const ctx = canvas.getContext("2d");
+      ctx.imageSmoothingEnabled = false;
+
+	  function relativeXY(e, canvas) {
+		  const rect = canvas.getBoundingClientRect();
+		  return {x: (e.clientX - rect.left)|0, y: (e.clientY - rect.top)|0};
+	  }
+
+      async function bootstrap() {
+        const { instance } = await WebAssembly.instantiateStreaming(
+          fetch("./wefx.wasm")
+        );
+        
+        const { 
+        	memory, 
+        	screen,
+        	init, 
+        	main_loop,
+        	wefx_draw,
+        	wefx_xsize,
+        	wefx_ysize,
+            wefx_add_queue_event,
+        } = instance.exports;
+
+        const err = init();
+        if(err) {
+        	console.error("Init failed");
+        	return;
+        }
+        const width = wefx_xsize();
+        const height = wefx_ysize();
+	    canvas.width = width;
+	    canvas.height = height;        
+        
+        const offset = screen.value;
+        const imgArray = new Uint8ClampedArray(
+          memory.buffer,
+          offset,
+          SIZE_OF_INT * width * height
+        );
+
+		const toWefxEvent = (t, e, canvas) => {
+			const xy = relativeXY(e, canvas);
+            const k = e.key ? e.key.charCodeAt(0) : 0;
+            wefx_add_queue_event(t, e.button, e.timeStamp, k, xy.x, xy.y);
+	    }
+
+		document.addEventListener('keypress',  (e) => toWefxEvent(WEFX_KEYPRESS, e, canvas));
+		document.addEventListener('keydown',   (e) => toWefxEvent(WEFX_KEYDOWN, e, canvas));
+		document.addEventListener('keyup',     (e) => toWefxEvent(WEFX_KEYUP, e, canvas));
+		canvas.addEventListener('mousedown',   (e) => toWefxEvent(WEFX_MOUSEDOWN, e, canvas));
+		canvas.addEventListener('mouseup',     (e) => toWefxEvent(WEFX_MOUSEUP, e, canvas));
+		canvas.addEventListener('mousemove',   (e) => toWefxEvent(WEFX_MOUSEMOVE, e, canvas));
+        
+        let start = Date.now();
+        const image = new ImageData(imgArray, width);
+        const loop = (t) => {
+          const current = Date.now();
+          const delta = current - start;
+          
+          main_loop(delta * 0.05);
+          wefx_draw(offset);
+          ctx.putImageData(image, 0, 0);
+
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+
+      bootstrap();
+    </script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <canvas id="screenCanvas"></canvas>
+    </div>
+  </body>
+</html>
