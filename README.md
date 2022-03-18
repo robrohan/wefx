@@ -147,7 +147,7 @@ wefx_clear_color(int red, green, blue)
 
 ### Windows
 
-I have run this on Windows, but you should be able to build it with Visual
+I have not run this on Windows, but you should be able to build it with Visual
 Studio. You will have to install `clang` as an add on, and then setup the
 build flags to the ones shown in the `Makefile`.
 
