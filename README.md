@@ -18,14 +18,14 @@ the serve step:
 ```
  Build
  ⌈                    ⌉             ⌈                   ⌉
- | ./src + ./examples | ⭢  clang ⭢  | ./build/wefx.wasm |
+ | ./src + ./examples | ⭢  clang ⭢ | ./build/wefx.wasm |
  ⌊                    ⌋             ⌊                   ⌋
                                              ⭣
         _____________________________________/
        /
       ⭣
  ⌈          ⌉                  ⌈         ⌉    ⌈      ⌉
- | ./build/ | ⭢  web server ⭢  | browser | ⭢  | you! |
+ | ./build/ | ⭢  web server ⭢ | browser | ⭢ | you! |
  ⌊          ⌋                  ⌊         ⌋    ⌊      ⌋
  Serve
 ```
