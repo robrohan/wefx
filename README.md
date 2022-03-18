@@ -12,10 +12,22 @@ has very simple functions to draw pixels and lines.
 
 ## Using The Project
 
-The basic flow of the code is the following:
+The basic flow of how the project works has two steps: the build step, and
+the serve step:
 
 ```
- [./src + ./examples] -> <clang -wasm> -> [./public/wefx.wasm] -> <webserver> -> [web browser] -> [you!]
+ Build
+ ⌈                    ⌉             ⌈                   ⌉
+ | ./src + ./examples | ⭢  clang ⭢  | ./build/wefx.wasm |
+ ⌊                    ⌋             ⌊                   ⌋
+                                             ⭣
+        _____________________________________/
+       /
+      ⭣
+ ⌈          ⌉                  ⌈         ⌉    ⌈      ⌉
+ | ./build/ | ⭢  web server ⭢  | browser | ⭢  | you! |
+ ⌊          ⌋                  ⌊         ⌋    ⌊      ⌋
+ Serve
 ```
 
 In other words, you compile the C code into a wasm, and then serve the
