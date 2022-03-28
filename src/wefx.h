@@ -71,6 +71,8 @@ int wefx_open(int width, int height, const char *title);
 /* Draw a point at (x,y) */
 void wefx_point(int x, int y);
 
+void wefx_circle(int x0, int y0, int r0);
+
 /* Draw a line from (x1,y1) to (x2,y2) */
 void wefx_line(int x1, int y1, int x2, int y2);
 

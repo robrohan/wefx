@@ -12,7 +12,7 @@
 // This is a handle to the event queue from the browser
 // TODO: not super happy with this, but passing a poitner
 // back from wefx to the queue just crashes the browser
-// need some better debug tools.
+// so we'll use the queue defined in wefx.c
 extern wefx_event_queue *wefx_q;
 
 // Called once at startup
