@@ -91,6 +91,36 @@ void wefx_line(int x0, int y0, int x1, int y1)
     }
 }
 
+// midpoint circle algorithm
+// read more here:
+// https://yurichev.com/news/20220322_circle/
+void wefx_circle(int x0, int y0, int r0)
+{
+    int x = r0;
+    int y = 0;
+    int err = 0;
+    while (x >= y)
+    {
+        wefx_point(x0 + x, y0 + y);
+
+        wefx_point(x0 + y, y0 + x);
+        wefx_point(x0 - y, y0 + x);
+        wefx_point(x0 - x, y0 + y);
+        wefx_point(x0 - x, y0 - y);
+        wefx_point(x0 - y, y0 - x);
+        wefx_point(x0 + y, y0 - x);
+        wefx_point(x0 + x, y0 - y);
+        
+        y += 1;
+        err += 2 * y + 1;
+        if (err > 0)
+        {
+            x -= 1;
+            err -= 2 * x + 1;
+        }
+    }
+}
+
 //////////////////////////////////////////////////////////
 // Event Queue
 wefx_event_queue *wefx_open_events()

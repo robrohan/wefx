@@ -68,6 +68,8 @@ void draw(int time)
 
     wefx_color(rand() % 0xff, rand() % 0xff, rand() & 0xff);
     wefx_line(W / 2, H / 2, abs(rand() % W), abs(rand() % H));
+    
+	wefx_circle(W >> 1, H >> 1, (H >> 1) - 5);
 }
 
 EXPORT void main_loop(float time)
