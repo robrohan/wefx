@@ -1,19 +1,81 @@
+/*
+---
+title: Wefx
+author: The Wefx Devs
+date: 2022-08-04
+rights: Copyright (c) Rob Rohan and Others
+lang: en-GB
+toc: true
+papersize: A4
+fontfamily: mathptmx
+fontsize: 11pt
+geometry:
+- top=30mm
+- left=20mm
+- right=20mm
+- bottom=30mm
+#abstract: |
+numbersections: true
+autoEqnLabels: true
+theme: Berlin
+colortheme: seahorse
+---
+
+# Wefx Drawing
+
+A simple graphics library made in the spirit of [gfx](http://www.nd.edu/~dthain/courses/cse20211/fall2013/gfx)
+
+To start out, we import our _wefx.h_ header file. This file contains a few structs, and
+enumerations we will be using throughout this implementation file.
+
+*/
 #include "wefx.h"
+
+/*
+
+Additionally, we include our _wasm.h_ file which will allow us to _EXPORT_ functions and
+variables to Javascript.
+
+*/
 #include "wasm.h"
 
 typedef unsigned int color;
+/*
 
+Make variables for our double buffered screen, and export the _screen_ variable so Javascript
+can use it's contents to create an image.
+
+*/
 EXPORT unsigned int *screen;
 static unsigned int *buffer;
 
+/*
+
+We also defined some global variables for foreground and background colour, as well as a
+global width (w) and height (h) variable.
+
+*/
 static color fg_color = 0;
 static color bg_color = 0;
 static int w = 0;
 static int h = 0;
 
+/*
+
+Lastly, we reserve a spot for an event queue where we will store user events from the browser.
+E.g. Mouse down, mouse move, key down, etc.
+
+*/
 wefx_event_queue *wefx_q = NULL;
 
-int wefx_open(int width, int height, const char *title)
+/*
+
+## Opening a Canvas - wefx_open
+
+Here we emulate opening a window. This allocates memory for our screen buffer.
+
+*/
+int wefx_open(unsigned int width, unsigned int height, const char *title)
 {
     w = width;
     h = height;
@@ -24,44 +86,107 @@ int wefx_open(int width, int height, const char *title)
     }
     return 0;
 }
+/*
 
-int rgb_to_int(int red, int green, int blue)
+## Convert Integers to RGB - rgb_to_int
+
+Since we have have a few functions that deal with colors, we create an internal function that
+will help convert three RGB values into a single integer value. This value will go directly
+into the screen buffer to represnet a pixel color.
+
+When we are given three values to represent RGB, we shift the colors up into a single integer.
+Note we need to ensure the values are not greater than 255 since we are only supporting RGB value
+from within that range.
+
+In the end, the integer will look like the following (in hexidecimal):
+
+| alpha | blue | green | red |
+|-------|------|-------|-----|
+| 0xFF  | FF  | FF    | FF  |
+
+from within a single integer.
+
+*/
+static int rgb_to_int(unsigned int red, unsigned int green, unsigned int blue)
 {
+    if (red > 255)
+        red = 255;
+    if (green > 255)
+        green = 255;
+    if (blue > 255)
+        blue = 255;
     int color = (0xFF << 24) + (blue << 16) + (green << 8) + (red);
     return color;
 }
+/*
 
-// Change the current foreground drawing color.
-void wefx_color(int red, int green, int blue)
+## Set the Foreground Color - wefx_color
+
+This function simply sets our _fg\_color_ variable to the specified color.
+
+Subsequent calls to draw will use this color until it is changed.
+
+*/
+void wefx_color(unsigned int red, unsigned int green, unsigned int blue)
 {
     fg_color = rgb_to_int(red, green, blue);
 }
 
-// draw a point at x y using the current colour
+/*
+
+## Draw a Single Point - wefx_point
+
+This function sets one pixel value to a color. It set one of the values in
+our _buffer_ array to the current value stored _fg\_color_.
+
+By setting the value at $x + y * w$ we are drawing a point at $(x,y)$ on the screen.
+
+*/
 void wefx_point(int x, int y)
 {
     buffer[x + y * w] = fg_color;
 }
 
-// Change the current background color.
-void wefx_clear_color(int red, int green, int blue)
+/*
+
+## Set the Background Color - wefx_clear_color
+
+This color will be used as the background color for the image. Call this to
+set the background color, and then by calling _wefx\_clear_, you can fill
+the entire screen buffer.
+
+*/
+void wefx_clear_color(unsigned int red, unsigned int green, unsigned int blue)
 {
     bg_color = rgb_to_int(red, green, blue);
 }
 
-// Clear the screen with the background color
+/*
+
+## Clear the Screen - wefx_clear
+
+This function will "clear the screen". What it actually does is fill the whole screen
+buffer with the current background color (see wefx_clear_color).
+
+This is often called at the top of the render loop to reset to a blank slate before
+doing any drawing.
+
+*/
 void wefx_clear()
 {
     for (int q = 0; q < w * h; q++)
         buffer[q] = bg_color;
 }
 
-// Draw a line from (x1,y1) to (x2,y2)
+/*
+## Draw a Line - wefx_line
+
+Here we define a simple function to draw a line. It will draw from (x1,y1) to (x2,y2)
+using Bresenham's line algorithm[^1] and the currently set foreground color.
+
+*/
 void wefx_line(int x0, int y0, int x1, int y1)
 {
-    // Bresenham's line algorithm
-    // read more here:
-    // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
     int dx = abs(x1 - x0);
     int sx = x0 < x1 ? 1 : -1;
     int dy = -abs(y1 - y0);
@@ -90,10 +215,14 @@ void wefx_line(int x0, int y0, int x1, int y1)
         }
     }
 }
+/*
 
-// midpoint circle algorithm
-// read more here:
-// https://yurichev.com/news/20220322_circle/
+## Draw a Circle - wefx_circle
+
+This function can be called to draw a circle. It also uses the
+currently set forground color. I uses the Midpoint Circle Algorithm[^2]
+
+*/
 void wefx_circle(int x0, int y0, int r0)
 {
     int x = r0;
@@ -110,7 +239,7 @@ void wefx_circle(int x0, int y0, int r0)
         wefx_point(x0 - y, y0 - x);
         wefx_point(x0 + y, y0 - x);
         wefx_point(x0 + x, y0 - y);
-        
+
         y += 1;
         err += 2 * y + 1;
         if (err > 0)
@@ -120,9 +249,62 @@ void wefx_circle(int x0, int y0, int r0)
         }
     }
 }
+/*
 
-//////////////////////////////////////////////////////////
-// Event Queue
+## Draw the Buffer to Screen
+
+When we call any of the wefx draw functions, we are actually changing
+the pixels in a buffer. They pixels we are setting are not actually
+drawn to the screen.
+
+This method is called from Javascript and asks us to draw our buffer to
+what it considers to be the screen.
+
+---
+
+*Note*: there might be a faster / better way to do this.
+
+---
+
+*/
+EXPORT void wefx_draw(unsigned int *screen)
+{
+    for (int q = 0; q < w * h; q++)
+        screen[q] = buffer[q];
+}
+/*
+
+## Get Screen Dimensions
+
+Javascript will need to know what size we have defined our screen
+size to be. These methods are exposed to Javascript to get the X
+and Y dimensions of the buffer / screen.
+
+*/
+EXPORT int wefx_xsize()
+{
+    return w;
+}
+EXPORT int wefx_ysize()
+{
+    return h;
+}
+
+/*
+
+# Event Queue
+
+In order to process browser events (keyboard and mouse input), we use
+a simple Queue. The Javascript that hosts this code will capture events
+in the browser and pass them into C using the queue. We can then use the
+queue to look at and process those events.
+
+## Open Events - wefx_open_events
+
+Similar to how _wefx\_open_ created screen memory, the _wefx_open_events_
+function allocates memory for the event queue.
+
+*/
 wefx_event_queue *wefx_open_events()
 {
     wefx_q = malloc(sizeof(struct wefx_event_queue));
@@ -134,7 +316,29 @@ wefx_event_queue *wefx_open_events()
 
     return NULL;
 }
+/*
 
+When we create a new queue, we want to set the head and tail to null to
+mark it as empty. This is not strictly necessary, but it will make knowing
+if the queue is empty a bit easier.
+
+*/
+void wefx_init_queue(wefx_event_queue *q)
+{
+    q->head = NULL;
+    q->tail = NULL;
+}
+/*
+
+## Add Events from Javascript
+
+Javascript will call this function directly to register that an event has
+occurred.
+
+Here we just take the parameters passed in from Javascript, put them into
+the _wefx\_event_ struct, and add it to the end of the queue.
+
+*/
 EXPORT void wefx_add_queue_event(int type, int button, int timestamp, int key, int x, int y)
 {
     // if we don't care about events drop everything
@@ -158,13 +362,15 @@ EXPORT void wefx_add_queue_event(int type, int button, int timestamp, int key, i
 
     wefx_enqueue(wefx_q, e);
 }
+/*
 
-void wefx_init_queue(wefx_event_queue *q)
-{
-    q->head = NULL;
-    q->tail = NULL;
-}
+## Add an Event to a Queue
 
+_wefx\_enqueue_ takes an event and adds it to the given queue. It does a number of
+checks to make sure the queue is in a valid state, and adds the event if
+everything is ok.
+
+*/
 int wefx_enqueue(wefx_event_queue *q, wefx_event *event)
 {
     // create a new node to store the event
@@ -193,7 +399,13 @@ int wefx_enqueue(wefx_event_queue *q, wefx_event *event)
 
     return 1;
 }
+/*
 
+## Remove an Event from a Queue
+
+Take the first event in the queue off the queue and return it.
+
+*/
 wefx_event *wefx_dequeue(wefx_event_queue *q)
 {
     if (q == NULL)
@@ -216,19 +428,9 @@ wefx_event *wefx_dequeue(wefx_event_queue *q)
     return e;
 }
 
-//////////////////////////////////////////////////////////
-EXPORT void wefx_draw(unsigned int *screen)
-{
-    for (int q = 0; q < w * h; q++)
-        screen[q] = buffer[q];
-}
+/*
 
-/* Return the X and Y dimensions of the window. */
-EXPORT int wefx_xsize()
-{
-    return w;
-}
-EXPORT int wefx_ysize()
-{
-    return h;
-}
+[^1]: You can read more about Bresenham's line algorithm here https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+[^2]: You can read more about the Midpoint Circle Algorithm here https://en.wikipedia.org/wiki/Midpoint_circle_algorithm
+
+*/
