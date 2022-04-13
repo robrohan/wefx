@@ -1,8 +1,7 @@
-frontmatter.md
+docs/frontmatter.md
+README.md
 src/wefx.c
-# src/wefx.h
 src/math.c
-# src/math.h
 src/walloc.h
 src/wasm.h
-bib.md
+docs/bib.md
