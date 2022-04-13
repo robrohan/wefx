@@ -1,3 +1,8 @@
+/*
+
+# Malloc Implementation
+
+*/
 #ifndef WEFX_WALLOC__H
 #define WEFX_WALLOC__H
 

@@ -1,25 +1,4 @@
 /*
----
-title: Wefx
-author: The Wefx Devs
-date: 2022-08-04
-rights: Copyright (c) Rob Rohan and Others
-lang: en-GB
-toc: true
-papersize: A4
-fontfamily: mathptmx
-fontsize: 11pt
-geometry:
-- top=30mm
-- left=20mm
-- right=20mm
-- bottom=30mm
-#abstract: |
-numbersections: true
-autoEqnLabels: true
-theme: Berlin
-colortheme: seahorse
----
 
 # Wefx Drawing
 
@@ -427,10 +406,3 @@ wefx_event *wefx_dequeue(wefx_event_queue *q)
     free(n);
     return e;
 }
-
-/*
-
-[^1]: You can read more about Bresenham's line algorithm here https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-[^2]: You can read more about the Midpoint Circle Algorithm here https://en.wikipedia.org/wiki/Midpoint_circle_algorithm
-
-*/
