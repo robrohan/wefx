@@ -31,14 +31,13 @@ static unsigned int *buffer;
 /*
 
 We also defined some global variables for foreground and background colour, as well as a
-global width (w) and height (h) variable.
+global width (_w_) and height (_h_) variable.
 
 */
 static color fg_color = 0;
 static color bg_color = 0;
 static int w = 0;
 static int h = 0;
-
 /*
 
 Lastly, we reserve a spot for an event queue where we will store user events from the browser.
@@ -46,7 +45,6 @@ E.g. Mouse down, mouse move, key down, etc.
 
 */
 wefx_event_queue *wefx_q = NULL;
-
 /*
 
 ## Opening a Canvas - wefx_open
@@ -161,7 +159,7 @@ void wefx_clear()
 ## Draw a Line - wefx_line
 
 Here we define a simple function to draw a line. It will draw from (x1,y1) to (x2,y2)
-using Bresenham's line algorithm[^1] and the currently set foreground color.
+using Bresenham's line algorithm and the currently set foreground color [@BresenhamLineAlgorithm_2022_].
 
 */
 void wefx_line(int x0, int y0, int x1, int y1)
@@ -199,7 +197,7 @@ void wefx_line(int x0, int y0, int x1, int y1)
 ## Draw a Circle - wefx_circle
 
 This function can be called to draw a circle. It also uses the
-currently set forground color. I uses the Midpoint Circle Algorithm[^2]
+currently set forground color. I uses the Midpoint Circle Algorithm [@MidpointCircleAlgorithm_2022_].
 
 */
 void wefx_circle(int x0, int y0, int r0)
@@ -382,7 +380,7 @@ int wefx_enqueue(wefx_event_queue *q, wefx_event *event)
 
 ## Remove an Event from a Queue
 
-Take the first event in the queue off the queue and return it.
+Take the first event in the queue off the queue, and return it.
 
 */
 wefx_event *wefx_dequeue(wefx_event_queue *q)

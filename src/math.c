@@ -9,7 +9,6 @@ First we include the header file which define some constants and macros.
 /*
 
 Params for the random number generator (lcg below)
-See this paper for more info: https://epub.wu.ac.at/1288/1/document.pdf
 
 */
 #define RND_2_31_MINUS_ONE 2147483647
@@ -17,6 +16,8 @@ See this paper for more info: https://epub.wu.ac.at/1288/1/document.pdf
 /*
 
 ## Abs function
+
+The _abs_ function will return the absolute value of the given number.
 
 */
 float abs(float n)
@@ -29,6 +30,10 @@ float abs(float n)
 
 ## Degree To Radians
 
+The _to\_radian_ function converts a degree value to a radian value. This is simply:
+
+$$ r = d \cdot \left(\pi / 180\right)$$
+
 */
 float to_radian(float degree)
 {
@@ -37,6 +42,10 @@ float to_radian(float degree)
 /*
 
 ## Radians To Degrees
+
+The _to\_degree_ function converts a radian value to a degree value. This is simply:
+
+$$ d = r \cdot \left(180 / \pi\right)$$
 
 */
 float to_degree(float radian)
@@ -98,18 +107,25 @@ float round(float x)
 
 ## Cosine function
 
-First we define the curve we're going to use to emulate cosine
+This function produces a cosine approximation. It takes a simple
+
+First we define the curve we're going to use to emulate cosine:
+
+$$y = x \cdot 16 \cdot \left(\left|x\right|-w\right) $$
+
+This curve looks close to cosine, but it does not repeat. So we
+recursively split a line and tilt it so the our cosine-like curve starts
+and stops at about the right place.
 
 $$p = \frac{x}{\pi^{2}}$$
 
-recursively split the line and tilt it so the our fake wave starts and
-stops at about the right place
-
 $$r = p - 0.25 -  \lfloor p + 0.25 \rfloor $$
 
-now put it together and make sure the ends touch
+now put it together and make sure the ends touch:
 
 $$y = r \times 16 \times \lvert r - 0.5 \rvert$$
+
+You can play more with the way this works on the Desmos website [@HandmadeCosine__Rohan]
 
 */
 float cos(float x)
@@ -137,7 +153,8 @@ float sin(float x)
 ## Seed Random
 
 Here we can seed the random number generator, or just use the
-default seed if one isn't provided
+default seed if one isn't provided. The default seed has no special
+meaning or value, it was just chosen at random.
 
 */
 static unsigned int SEED = 9035768;
@@ -147,14 +164,15 @@ void srand(unsigned int seed)
 }
 /*
 
-## Random
+## Random - rand()
 
 Basic random number generator. Linear congruential generator
 
-If the increment (inc) = 0, the generator is a multiplicative
-congruential generator (MCG)
+If the increment parameter is set to zero _inc = 0_, the generator is a _multiplicative
+congruential generator (MCG)_. If the _inc_ parameter is not 0, the method is
+called a mixed congruential generator [@PortableUniformRandomNumber__Hormann].
 
-If inc != 0, the method is called a mixed congruential generator.
+By default, when you call _rand()_ the increment value is set to zero.
 
 */
 static int lcg(int md, int mult, int inc, int seed)
