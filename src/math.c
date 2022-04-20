@@ -107,7 +107,7 @@ float round(float x)
 
 ## Cosine function
 
-This function produces a cosine approximation. It takes a simple
+This function produces a cosine approximation [@FastAccurateSineCosine_2017_Nick].
 
 First we define the curve we're going to use to emulate cosine:
 
