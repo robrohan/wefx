@@ -1,8 +1,11 @@
+.PHONY: docs
 
-CC=clang
+CC?=clang
 # STACK_SIZE=$$(( 8 * 1024 * 1024 ))
-STACK_SIZE=$$(( 8 * 1024 ))
+STACK_SIZE?=$$(( 8 * 1024 ))
 
+PANDOC?=pandoc
+NARRATIVE?=narrative
 MAIN?=examples/example0.c
 
 NO_BUILT_INS=-fno-builtin-sin -fno-builtin-cos \
@@ -48,6 +51,21 @@ serve: clean build
 
 clean_test:
 	rm -f test
+
+docs:
+# requires narrative and pandoc to be installed
+	rm -f docs/manual.md
+	cd docs; \
+	$(NARRATIVE) \
+		-i ./NARRATIVE \
+		-o manual.md; \
+	$(PANDOC) --pdf-engine=xelatex -s -t pdf \
+		--citeproc \
+		-f markdown manual.md \
+		-o manual.pdf;
+
+install_linux:
+	apt-get install groff pandoc texlive-xetex
 
 test: clean_test
 	mkdir -p build

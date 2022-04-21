@@ -1,7 +1,0 @@
-docs/header.md
-README.md
-src/wefx.c
-src/math.c
-src/walloc.h
-src/wasm.h
-docs/footer.md
