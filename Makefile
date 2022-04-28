@@ -53,6 +53,8 @@ clean_test:
 
 docs:
 # requires narrative and pandoc to be installed
+# if you would like to try the docker container way
+# see below
 	rm -f docs/manual.md
 	cd docs; \
 	$(NARRATIVE) \
@@ -74,3 +76,24 @@ test: clean_test
 		src/math.c src/wefx.c src/test.c \
 		-o build/test
 	./build/test
+
+########################################
+# Build the docs using docker containers
+# WIP. You need docker installed as well.
+docker_docs: docker_narrative docker_pandoc
+
+docker_narrative:
+	rm -f ./docs/manual.md
+	docker run --rm -it \
+		-v $(shell pwd):/root/workspace \
+		robrohan/narrative \
+			-i ./docs/NARRATIVE \
+			-o ./docs/manual.md
+
+docker_pandoc:
+	docker run --rm -it \
+		-v $(shell cd docs; pwd):/root/workspace \
+		robrohan/pandoc --pdf-engine=xelatex -s -t pdf \
+		--citeproc \
+		-f markdown ./manual.md \
+		-o ./manual.pdf
