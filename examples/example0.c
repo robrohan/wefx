@@ -9,12 +9,6 @@
 #define W 105
 #define H 50
 
-// This is a handle to the event queue from the browser
-// TODO: not super happy with this, but passing a poitner
-// back from wefx to the queue just crashes the browser
-// so we'll use the queue defined in wefx.c
-extern wefx_event_queue *wefx_q;
-
 // Called once at startup
 EXPORT int init()
 {
@@ -24,8 +18,7 @@ EXPORT int init()
         return 1;
 
     // enable mouse and keyboard events
-    wefx_event_queue *queue = wefx_open_events();
-    if (queue == NULL)
+    if (wefx_open_events() == NULL)
         return 1;
 
     wefx_clear_color(0x00, 0x00, 0x00);
@@ -37,8 +30,11 @@ EXPORT int init()
 }
 
 // Handle input each frame
-void input(int time)
+void input(int time, wefx_event_queue *wefx_q)
 {
+    if (wefx_q == NULL)
+        return;
+
     // we need to at least drain the event queue
     // or we'll evenutally run out of memory
     wefx_event *e = wefx_dequeue(wefx_q);
@@ -57,6 +53,8 @@ void input(int time)
                 wefx_clear_color(rand() % 0xff, rand() % 0xff, rand() & 0xff);
             }
             break;
+        default:
+            break;
         }
         // Dodgy, but javascript creates this when it makes
         // the event so we need to free the event here.
@@ -72,7 +70,7 @@ void draw(int time)
 {
     wefx_clear();
     wefx_color(rand() % 0xff, rand() % 0xff, rand() & 0xff);
-    
+
     // W
     wefx_line(15, 15, 20, 35);
     wefx_line(20, 35, 22, 25);
@@ -93,9 +91,9 @@ void draw(int time)
 }
 
 // Called every frame
-EXPORT void main_loop(float time)
+EXPORT void main_loop(float time, wefx_event_queue *wefx_q)
 {
     int itime = (int)time;
-    input(itime);
+    // input(itime, wefx_q);
     draw(itime);
 }

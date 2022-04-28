@@ -4,23 +4,22 @@
 #define W 1024
 #define H 768
 
-extern wefx_event_queue *wefx_q;
-
 EXPORT int init()
 {
     int err = wefx_open(W, H, "Test Window");
     if (err)
         return 1;
-    wefx_event_queue *queue = wefx_open_events();
-    if (queue == NULL)
+
+    if (wefx_open_events() == NULL)
         return 1;
+
     wefx_clear_color(0x00, 0x00, 0x00);
     wefx_clear();
     srand(9999991);
     return 0;
 }
 
-void input(int time)
+void input(int time, wefx_event_queue *wefx_q)
 {
     wefx_event *e = wefx_dequeue(wefx_q);
     while (e != NULL)
@@ -41,7 +40,6 @@ void input(int time)
         e = wefx_dequeue(wefx_q);
     }
 }
-
 
 void draw(int time)
 {
@@ -68,13 +66,13 @@ void draw(int time)
 
     wefx_color(rand() % 0xff, rand() % 0xff, rand() & 0xff);
     wefx_line(W / 2, H / 2, abs(rand() % W), abs(rand() % H));
-    
-	wefx_circle(W >> 1, H >> 1, (H >> 1) - 5);
+
+    wefx_circle(W >> 1, H >> 1, (H >> 1) - 5);
 }
 
-EXPORT void main_loop(float time)
+EXPORT void main_loop(float time, wefx_event_queue *wefx_q)
 {
     int itime = (int)time;
-    input(itime);
+    // input(itime, wefx_q);
     draw(itime);
 }

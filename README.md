@@ -1,6 +1,6 @@
 # wefx
 
-Wefx is a simple graphics library for drawing using C, WASM ([Web Assembly][webassembly]), and an [HTML canvas][htmlcanvas]. It aims to serve a similar to [gfx][gfx], but provide an introduction to using C and WASM. Wefx is meant to be a teaching / learning tool for C and graphics. Wefx is not using OpenGL /
+Wefx is a simple graphics library for drawing using C, WASM ([Web Assembly][webassembly]), and an [HTML canvas][htmlcanvas]. It aims to serve a similar purpose as [gfx][gfx], but provide an introduction to using C and WASM. Wefx is meant to be a teaching / learning tool for C and graphics. Wefx is not using OpenGL /
 WebGL or anything like that. It is doing very basic pixel manipulation and
 has very simple functions to draw pixels and lines.
 
@@ -67,9 +67,7 @@ directly from your file system (this is just how wasm loading works).
 If you try to open the `index.html` file directly you will get an error
 like:
 
-```
-Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at file:///xxxxx/build/wefx.wasm. (Reason: CORS request not http).
-```
+> Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at file:///xxxxx/build/wefx.wasm. (Reason: CORS request not http).
 
 A basic http server comes with python3, and the make file will run that
 server if you run:

@@ -1,8 +1,7 @@
 .PHONY: docs
 
-CC?=clang
-# STACK_SIZE=$$(( 8 * 1024 * 1024 ))
-STACK_SIZE?=$$(( 8 * 1024 ))
+CC=clang
+STACK_SIZE=$$(( 8 * 1024 * 1024 ))
 
 PANDOC?=pandoc
 NARRATIVE?=narrative

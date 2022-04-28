@@ -27,7 +27,6 @@ can use it's contents to create an image.
 */
 EXPORT unsigned int *screen;
 static unsigned int *buffer;
-
 /*
 
 We also defined some global variables for foreground and background colour, as well as a
@@ -44,7 +43,7 @@ Lastly, we reserve a spot for an event queue where we will store user events fro
 E.g. Mouse down, mouse move, key down, etc.
 
 */
-wefx_event_queue *wefx_q = NULL;
+EXPORT wefx_event_queue *wefx_q = NULL;
 /*
 
 ## Opening a Canvas - wefx_open
@@ -86,12 +85,9 @@ from within a single integer.
 */
 static int rgb_to_int(unsigned int red, unsigned int green, unsigned int blue)
 {
-    if (red > 255)
-        red = 255;
-    if (green > 255)
-        green = 255;
-    if (blue > 255)
-        blue = 255;
+    red = MIN(red, 255);
+    green = MIN(green, 255);
+    blue = MIN(blue, 255);
     int color = (0xFF << 24) + (blue << 16) + (green << 8) + (red);
     return color;
 }
@@ -108,7 +104,6 @@ void wefx_color(unsigned int red, unsigned int green, unsigned int blue)
 {
     fg_color = rgb_to_int(red, green, blue);
 }
-
 /*
 
 ## Draw a Single Point - wefx_point
@@ -123,7 +118,6 @@ void wefx_point(int x, int y)
 {
     buffer[x + y * w] = fg_color;
 }
-
 /*
 
 ## Set the Background Color - wefx_clear_color
@@ -137,7 +131,6 @@ void wefx_clear_color(unsigned int red, unsigned int green, unsigned int blue)
 {
     bg_color = rgb_to_int(red, green, blue);
 }
-
 /*
 
 ## Clear the Screen - wefx_clear
@@ -154,8 +147,8 @@ void wefx_clear()
     for (int q = 0; q < w * h; q++)
         buffer[q] = bg_color;
 }
-
 /*
+
 ## Draw a Line - wefx_line
 
 Here we define a simple function to draw a line. It will draw from (x1,y1) to (x2,y2)
@@ -197,7 +190,7 @@ void wefx_line(int x0, int y0, int x1, int y1)
 ## Draw a Circle - wefx_circle
 
 This function can be called to draw a circle. It also uses the
-currently set forground color. I uses the Midpoint Circle Algorithm [@MidpointCircleAlgorithm_2022_].
+currently set forground color. It uses the Midpoint Circle Algorithm [@MidpointCircleAlgorithm_2022_].
 
 */
 void wefx_circle(int x0, int y0, int r0)
@@ -231,7 +224,7 @@ void wefx_circle(int x0, int y0, int r0)
 ## Draw the Buffer to Screen
 
 When we call any of the wefx draw functions, we are actually changing
-the pixels in a buffer. They pixels we are setting are not actually
+the pixels in a buffer. The pixels we are setting are not actually
 drawn to the screen.
 
 This method is called from Javascript and asks us to draw our buffer to
@@ -266,7 +259,6 @@ EXPORT int wefx_ysize()
 {
     return h;
 }
-
 /*
 
 # Event Queue
@@ -389,18 +381,19 @@ wefx_event *wefx_dequeue(wefx_event_queue *q)
         return NULL;
 
     if (q->head == NULL)
-    {
         return NULL;
-    }
 
     wefx_event_node *n = q->head;
     wefx_event *e = n->event;
-    q->head = q->head->next;
-    if (q->head == NULL)
-    {
-        q->tail = NULL;
-    }
+    q->head = n->next;
 
-    free(n);
+    // if our new head is null, make sure the
+    // tail is set to null
+    if (q->head == NULL)
+        q->tail = NULL;
+
+    if (n != NULL)
+        free(n);
+
     return e;
 }
