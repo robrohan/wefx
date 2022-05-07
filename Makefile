@@ -80,7 +80,7 @@ test: clean_test
 ########################################
 # Build the docs using docker containers
 # WIP. You need docker installed as well.
-docker_docs: docker_narrative docker_pandoc
+docker_docs: docker_narrative docker_pdf
 
 docker_narrative:
 	rm -f ./docs/manual.md
@@ -90,10 +90,21 @@ docker_narrative:
 			-i ./docs/NARRATIVE \
 			-o ./docs/manual.md
 
-docker_pandoc:
+docker_pdf:
 	docker run --rm -it \
 		-v $(shell cd docs; pwd):/root/workspace \
 		robrohan/pandoc --pdf-engine=xelatex -s -t pdf \
 		--citeproc \
 		-f markdown ./manual.md \
 		-o ./manual.pdf
+
+docker_epub:
+	docker run --rm -it \
+		-v $(shell cd docs; pwd):/root/workspace \
+		robrohan/pandoc --pdf-engine=xelatex -s -t epub \
+		--citeproc \
+		-f markdown ./manual.md \
+		-o ./manual.epub
+
+
+
