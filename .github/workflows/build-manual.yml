@@ -1,0 +1,37 @@
+name: Build Narrative Manual
+on:
+    push:
+        branches:
+          - main
+jobs:
+    compile:
+        name: Build markdown and pdf
+        runs-on: ubuntu-latest
+        steps:
+          - name: Check out the repo
+            uses: actions/checkout@v2
+          - name: Combine code into one main md file
+            uses: addnab/docker-run-action@v3
+            with:
+                image: robrohan/narrative:latest
+                options: -v ${{ github.workspace }}:/root/workspace
+                run: |
+                    /root/narrative \
+                        -i ./docs/NARRATIVE \
+                        -o ./docs/manual.md
+          - name: Run pandoc against main md file
+            uses: addnab/docker-run-action@v3
+            with:
+                image: robrohan/pandoc:latest
+                options: -v ${{ github.workspace }}/docs:/root/workspace
+                run: |
+                    /root/.cabal/bin/pandoc            \
+                        --pdf-engine=xelatex -s -t pdf \
+                        --citeproc                     \
+                        -f markdown ./manual.md        \
+                        -o ./manual.pdf
+          - name: Upload build artifacts
+            uses: actions/upload-artifact@v3
+            with:
+                name: manual.pdf
+                path: ${{ github.workspace }}/docs/manual.pdf
