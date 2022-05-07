@@ -14,8 +14,8 @@ jobs:
                 options: -v ${{ github.workspace }}:/root/workspace
                 run: |
                     /root/narrative \
-                        -i ./doc/NARRATIVE \
-                        -o ./doc/manual.md
+                        -i ./docs/NARRATIVE \
+                        -o ./docs/manual.md
           - name: Run pandoc against main md file
             uses: addnab/docker-run-action@v3
             with:
