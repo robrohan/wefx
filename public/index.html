@@ -22,13 +22,13 @@
 
     <script type="module">
       // TODO: export from C?
-      const WEFX_KEYDOWN = 0;
-      const WEFX_KEYPRESS = 1;
-      const WEFX_KEYUP = 2;
+      const WEFX_KEYDOWN   = 0;
+      const WEFX_KEYPRESS  = 1;
+      const WEFX_KEYUP     = 2;
       const WEFX_MOUSEMOVE = 3;
       const WEFX_MOUSEDOWN = 4;
-      const WEFX_MOUSEUP = 5;
-      const WEFX_CLICK = 6;
+      const WEFX_MOUSEUP   = 5;
+      const WEFX_CLICK     = 6;
 
       const SIZE_OF_INT = 4;
       const canvas = document.getElementById("screenCanvas");
@@ -44,8 +44,29 @@
       }
 
       async function bootstrap() {
+        const env = {
+          print: function(strptr) {
+            // Because C will only send pointers into the
+            // memory, we need to grab the char values out
+            // of memory. C strings are terminated by a 
+            // null character by default. 
+            // Super unsafe code here - which is half the fun.
+            let mptr = strptr;
+            const memory = getMemory();
+            const view = new Uint8ClampedArray(memory)
+            let out = "";
+            let c = view[mptr];
+            while(c != 0) {
+              out += String.fromCharCode(c);
+              c = view[++mptr];
+            }
+            console.log(out);
+          }
+        };
+        
         const { instance } = await WebAssembly.instantiateStreaming(
-          fetch("./wefx.wasm")
+          fetch("./wefx.wasm"),
+          {env: env},
         );
 
         const {
@@ -53,6 +74,7 @@
           screen,
           init,
           main_loop,
+          wefx_log,
           wefx_draw,
           wefx_xsize,
           wefx_ysize,
@@ -76,6 +98,10 @@
           offset,
           SIZE_OF_INT * width * height
         );
+
+        const getMemory = () => {
+          return memory.buffer;
+        }
 
         const toWefxEvent = (t, e, canvas) => {
           const xy = relativeXY(e, canvas);

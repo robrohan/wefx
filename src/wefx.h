@@ -92,6 +92,8 @@ void wefx_clear_color(unsigned int red, unsigned int green, unsigned int blue);
 int wefx_xsize();
 int wefx_ysize();
 
+extern void print(const char *);
+
 // Check to see if an event is waiting.
 // int wefx_event_waiting();
 

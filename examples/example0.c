@@ -10,6 +10,7 @@
 #define H 50
 
 // Called once at startup
+// note: memory not initialized yet so 'print's wont work
 EXPORT int init()
 {
     // Open a "window"
@@ -35,34 +36,30 @@ void input(int time, wefx_event_queue *wefx_q)
     if (wefx_q == NULL)
         return;
 
-    // we need to at least drain the event queue
-    // or we'll evenutally run out of memory
-    wefx_event *e = wefx_dequeue(wefx_q);
-    while (e != NULL)
-    {
-        switch (e->type)
-        {
-        case WEFX_MOUSEDOWN:
-            wefx_clear_color(rand() % 0xff, rand() % 0xff, rand() & 0xff);
-            break;
-        case WEFX_KEYDOWN:
-            if (e->key == 0)
-                break;
-            if (e->key == 'a')
-            {
-                wefx_clear_color(rand() % 0xff, rand() % 0xff, rand() & 0xff);
-            }
-            break;
-        default:
-            break;
-        }
-        // Dodgy, but javascript creates this when it makes
-        // the event so we need to free the event here.
-        free(e);
+    // print("input called");
 
-        // grab the next item in the queue
-        e = wefx_dequeue(wefx_q);
+    // we need to at least drain the event queue
+    // or we'll eventually run out of memory
+    wefx_event *e = wefx_dequeue(wefx_q);
+    switch (e->type)
+    {
+    case WEFX_MOUSEDOWN:
+        wefx_clear_color(rand() % 0xff, rand() % 0xff, rand() & 0xff);
+        break;
+    case WEFX_KEYDOWN:
+        if (e->key == 0)
+            break;
+        if (e->key == 'a')
+        {
+            wefx_clear_color(rand() % 0xff, rand() % 0xff, rand() & 0xff);
+        }
+        break;
+    default:
+        break;
     }
+    // Dodgy, but javascript creates this when it makes
+    // the event so we need to free the event here.
+    free(e);
 }
 
 // Draw to our screen buffer
@@ -94,6 +91,6 @@ void draw(int time)
 EXPORT void main_loop(float time, wefx_event_queue *wefx_q)
 {
     int itime = (int)time;
-    // input(itime, wefx_q);
+    input(itime, wefx_q);
     draw(itime);
 }

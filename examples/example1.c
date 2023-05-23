@@ -22,23 +22,19 @@ EXPORT int init()
 void input(int time, wefx_event_queue *wefx_q)
 {
     wefx_event *e = wefx_dequeue(wefx_q);
-    while (e != NULL)
+    switch (e->type)
     {
-        switch (e->type)
+    case WEFX_MOUSEDOWN:
+        wefx_clear_color(rand() % 0xff, rand() % 0xff, rand() & 0xff);
+        break;
+    case WEFX_KEYDOWN:
+        if (e->key == 'w' || e->key == 'a'|| e->key == 's' || e->key == 'd')
         {
-        case WEFX_MOUSEDOWN:
             wefx_clear_color(rand() % 0xff, rand() % 0xff, rand() & 0xff);
-            break;
-        case WEFX_KEYDOWN:
-            if (e->key == 'a')
-            {
-                wefx_clear_color(rand() % 0xff, rand() % 0xff, rand() & 0xff);
-            }
-            break;
         }
-        free(e);
-        e = wefx_dequeue(wefx_q);
+        break;
     }
+    free(e);
 }
 
 void draw(int time)
@@ -73,6 +69,6 @@ void draw(int time)
 EXPORT void main_loop(float time, wefx_event_queue *wefx_q)
 {
     int itime = (int)time;
-    // input(itime, wefx_q);
+    input(itime, wefx_q);
     draw(itime);
 }

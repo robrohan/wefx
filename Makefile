@@ -36,6 +36,7 @@ build: clean
 		-g \
 		-nostdlib \
 		-Os -flto \
+		-Wl,--allow-undefined \
 		-Wl,--export-dynamic \
 		-Wl,--no-entry \
 		-Wl,--lto-O3 \

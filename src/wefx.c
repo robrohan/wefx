@@ -190,7 +190,7 @@ void wefx_line(int x0, int y0, int x1, int y1)
 ## Draw a Circle - wefx_circle
 
 This function can be called to draw a circle. It also uses the
-currently set forground color. It uses the Midpoint Circle Algorithm [@MidpointCircleAlgorithm_2022_].
+currently set foreground color. It uses the Midpoint Circle Algorithm [@MidpointCircleAlgorithm_2022_].
 
 */
 void wefx_circle(int x0, int y0, int r0)
@@ -277,6 +277,7 @@ function allocates memory for the event queue.
 wefx_event_queue *wefx_open_events()
 {
     wefx_q = malloc(sizeof(struct wefx_event_queue));
+    // wefx_q = &(const struct wefx_event_queue){ 0 };
     if (wefx_q != NULL)
     {
         wefx_init_queue(wefx_q);
@@ -380,11 +381,22 @@ wefx_event *wefx_dequeue(wefx_event_queue *q)
     if (q == NULL)
         return NULL;
 
+    wefx_event *e = NULL;
+
     if (q->head == NULL)
         return NULL;
 
     wefx_event_node *n = q->head;
-    wefx_event *e = n->event;
+
+    if(n->event == NULL) {
+        goto clean_up;
+    }
+
+    e = n->event;
+
+    if(n->next == NULL) {
+        goto clean_up;
+    }
     q->head = n->next;
 
     // if our new head is null, make sure the
@@ -392,6 +404,7 @@ wefx_event *wefx_dequeue(wefx_event_queue *q)
     if (q->head == NULL)
         q->tail = NULL;
 
+clean_up:
     if (n != NULL)
         free(n);
 
