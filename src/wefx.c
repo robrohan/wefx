@@ -116,7 +116,15 @@ By setting the value at $x + y * w$ we are drawing a point at $(x,y)$ on the scr
 */
 void wefx_point(int x, int y)
 {
-    buffer[x + y * w] = fg_color;
+    int inboundx = x-1 < 0 ? 0 : x-1;
+    int inboundy = y+1 > h ? y : y+1;
+    //               because 0,0 should display at the bottom left
+    //               we need to add 1 to the height or 0 is offscreen
+    int offset = inboundx + (((int)abs( (inboundy) - h) * w));
+    if(offset > w*h || offset < 0) {
+        return;
+    }
+    buffer[offset] = fg_color;
 }
 /*
 
