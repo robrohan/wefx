@@ -150,6 +150,15 @@ float sin(float x)
 }
 /*
 
+## Tan function
+
+*/
+float tan(float x)
+{
+    return sin(x) / cos(x);
+}
+/*
+
 ## Seed Random
 
 Here we can seed the random number generator, or just use the
