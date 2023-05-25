@@ -141,6 +141,8 @@ The API calls try to emulate [gfx][gfx] as much as possible. Here are a few curr
 
 #### Coordinate System
 
+The coordinate system in newer versions has changed to reflect most other drawing styles. The system works thusly:
+
 ```
       +Y
        |
@@ -149,6 +151,17 @@ The API calls try to emulate [gfx][gfx] as much as possible. Here are a few curr
        |
  (0,0) +---------- +X
 
+```
+
+In version 1 (or earlier) of the library, the positive Y was flipped:
+
+```
+ (0,0) +---------- +X
+       |
+       |
+       |
+       |
+      +Y
 ```
 
 ### Windows OS
