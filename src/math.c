@@ -150,7 +150,7 @@ float sin(float x)
 }
 /*
 
-## Tan function
+## Tangent function
 
 */
 float tan(float x)
