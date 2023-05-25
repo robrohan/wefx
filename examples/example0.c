@@ -69,20 +69,20 @@ void draw(int time)
     wefx_color(rand() % 0xff, rand() % 0xff, rand() & 0xff);
 
     // W
-    wefx_line(15, 15, 20, 35);
-    wefx_line(20, 35, 22, 25);
-    wefx_line(23, 25, 25, 35);
-    wefx_line(25, 35, 30, 15);
+    wefx_line(15, 35, 20, 15);
+    wefx_line(20, 15, 22, 25);
+    wefx_line(22, 25, 25, 15);
+    wefx_line(25, 15, 30, 35);
     // E
     wefx_line(50, 15, 35, 15);
     wefx_line(45, 25, 35, 25);
     wefx_line(50, 35, 35, 35);
     wefx_line(35, 15, 35, 35);
     // F
-    wefx_line(70, 15, 55, 15);
+    wefx_line(70, 35, 55, 35);
     wefx_line(65, 25, 55, 25);
-    wefx_line(55, 15, 55, 35);
-    // X
+    wefx_line(55, 35, 55, 15);
+    // // X
     wefx_line(75, 15, 90, 35);
     wefx_line(90, 15, 75, 35);
 }

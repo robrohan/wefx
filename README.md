@@ -124,7 +124,9 @@ make build MAIN=examples/example1.c
 
 will build the WASM file using `example1.c` as the entry point.
 
-### API: Getting Started
+### Getting Started
+
+#### API
 
 The API calls try to emulate [gfx][gfx] as much as possible. Here are a few currently supported functions (see the documentation for a full reference):
 
@@ -136,6 +138,31 @@ The API calls try to emulate [gfx][gfx] as much as possible. Here are a few curr
 |wefx_point(x, y) | Draw a single point |
 |wefx_line(x1, y1, x2, y2) | Draw a line from (x1,y1) to (x2,y2) |
 |wefx_clear() | Clear the canvas using the background color |
+
+#### Coordinate System
+
+The coordinate system in newer versions has changed to reflect most other drawing styles. The system works thusly:
+
+```
+      +Y
+       |
+       |
+       |
+       |
+ (0,0) +---------- +X
+
+```
+
+In version 1 (or earlier) of the library, the positive Y was flipped:
+
+```
+ (0,0) +---------- +X
+       |
+       |
+       |
+       |
+      +Y
+```
 
 ### Windows OS
 

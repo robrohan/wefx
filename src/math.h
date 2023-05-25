@@ -30,6 +30,7 @@ float pow(float x, float y);
 
 float cos(float x);
 float sin(float x);
+float tan(float x);
 
 int rand(void);
 void srand(unsigned int seed);

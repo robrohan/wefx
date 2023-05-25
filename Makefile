@@ -7,7 +7,7 @@ PANDOC?=pandoc
 NARRATIVE?=narrative
 MAIN?=examples/example0.c
 
-NO_BUILT_INS=-fno-builtin-sin -fno-builtin-cos \
+NO_BUILT_INS=-fno-builtin-sin -fno-builtin-cos -fno-builtin-tan \
 	-fno-builtin-ceil -fno-builtin-floor \
 	-fno-builtin-pow -fno-builtin-round  \
 	-fno-builtin-abs -fno-builtin-malloc \
