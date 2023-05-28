@@ -194,3 +194,19 @@ int rand()
 {
     return lcg(RND_2_31_MINUS_ONE, RND_PARK_MILLER, 0, SEED);
 }
+/*
+
+## Square root
+
+Algorithm from an unknown Babylonian mathematician [@BabylonianSqareRoot_2023]
+
+*/
+float sqrt(float n)
+{
+    float z = 1.0;
+    for (int i = 1; i <= 10; i++)
+    {
+        z -= (z * z - n) / (2 * z);
+    }
+    return z;
+}

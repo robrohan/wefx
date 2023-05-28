@@ -11,6 +11,7 @@
 #define M_PI2    6.283185307179
 #define M_PI_SQR 9.869604401089
 #define M_PID2   1.570796326794
+#define M_3PID2  4.712388980384
 // clang-format on
 #endif
 
@@ -18,6 +19,7 @@
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 float abs(float n);
+float sqrt(float n);
 
 float to_radian(float degree);
 float to_degree(float radians);
