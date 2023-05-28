@@ -53,6 +53,13 @@ int main()
         printf("0.308866 == %f\n", sin(0.314000));
     }
 
+    // Simple square root test
+    {
+        printf("---------------------------\n");
+        printf("sqrt(2) == %f\n", sqrt(2));
+        printf("sqrt(3.14) == %f\n", sqrt(3.14));
+    }
+
     // Simple rand tests
     {
         printf("---------------------------\n");
