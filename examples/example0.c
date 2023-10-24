@@ -2,15 +2,15 @@
 #include "../src/wefx.h"
 
 /*
- * - the top-left is (0,0) and the pixel coordinates increase
- * in the right and down directions
+ * - the bottom-left is (0,0) and the pixel coordinates increase
+ * in the right and up directions
  * - the pixel centers have integer coordinates.
  */
 #define W 105
 #define H 50
 
 // Called once at startup
-// note: memory not initialized yet so 'print's wont work
+// note: memory not initialized yet so 'print' will not work
 EXPORT int init()
 {
     // Open a "window"
@@ -35,8 +35,6 @@ void input(int time, wefx_event_queue *wefx_q)
 {
     if (wefx_q == NULL)
         return;
-
-    // print("input called");
 
     // we need to at least drain the event queue
     // or we'll eventually run out of memory

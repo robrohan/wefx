@@ -116,13 +116,13 @@ points into that file:
 |init()| Called once at the start of the app|
 |main_loop(time)| Called every frame with time being time since app start|
 
-You can also add your own files entry files in the examples directory, and then pass them to the build script using the _MAIN_ variable. For example:
+You can also add your own entry files in the examples directory, and then pass them to the build script using the _MAIN_ variable. For example:
 
 ```{sh}
 make build MAIN=examples/example1.c
 ```
 
-will build the WASM file using `example1.c` as the entry point.
+This will build the WASM file using `example1.c` as the entry point.
 
 ### Getting Started
 
