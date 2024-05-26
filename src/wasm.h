@@ -15,6 +15,10 @@ to be able to call a C function from within Javascript.
 #include "math.h"
 #include "walloc.h"
 
+#ifndef NULL
+#define NULL ((void *)0)
+#endif
+
 #define EXPORT __attribute__((visibility("default")))
 
 #endif

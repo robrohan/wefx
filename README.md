@@ -10,6 +10,12 @@ You can also [download the documentation](https://raw.githubusercontent.com/robr
 
 ![Example Screenshot](https://raw.githubusercontent.com/robrohan/wefx/main/docs/wefx_shot.png)
 
+## Quick Start
+
+If you are using Ubuntu, you can run `make init` to install the correct version of clang and tools. If you are on another system, you will have to install `clang` yourself. 
+
+Once installed, `make build` should compile `examples/example0.c` into WASM (if there are no errors). If successful, and if you have python installed, you can run `make serve` to start a simple HTTP server and browse to http://localhost:8000 to view wasm output.
+
 ## Using The Project
 
 The flow of the project has two steps: the build step, and the serve step:

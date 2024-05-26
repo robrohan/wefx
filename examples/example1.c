@@ -1,5 +1,6 @@
 #include "../src/wasm.h"
 #include "../src/wefx.h"
+#include "../src/events.h"
 
 #define W 1024
 #define H 768

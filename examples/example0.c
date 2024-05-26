@@ -1,5 +1,6 @@
 #include "../src/wasm.h"
 #include "../src/wefx.h"
+#include "../src/events.h"
 
 /*
  * - the bottom-left is (0,0) and the pixel coordinates increase

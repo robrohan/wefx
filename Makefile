@@ -25,6 +25,11 @@ about:
 	@echo "make test    -  run some basic tests."
 	@echo ""
 
+init:
+	sudo apt install clang-14
+	sudo apt install lld-14
+	sudo apt-get install gcc-multilib
+
 clean:
 	rm -rf build
 
@@ -44,7 +49,7 @@ build: clean
 		-Wl,-z,stack-size=$(STACK_SIZE) \
 		$(NO_BUILT_INS) \
 		-o build/wefx.wasm \
-		src/walloc.c src/math.c src/wefx.c $(MAIN)
+		src/walloc.c src/math.c src/events.c src/wefx.c $(MAIN)
 	cp public/index.html build/index.html
 
 serve: clean build
@@ -71,9 +76,13 @@ install_linux:
 	apt-get install groff pandoc texlive-xetex
 
 test: clean_test
+	@echo "if you get: 'fatal error: 'bits/libc-header-start.h' file not found'"
+	@echo "you need 32 bit libs installed. Either remove -m32 from the flags below"
+	@echo "or run 'sudo apt-get install gcc-multilib' or equivalent."
+
 	mkdir -p build
 # add -lm if you want to test against built in math.h
-	clang -std=c99 -m32 -g \
+	$(CC) -std=c99 -m32 -g \
 		$(NO_BUILT_INS) \
 		src/math.c src/wefx.c src/test.c \
 		-o build/test
