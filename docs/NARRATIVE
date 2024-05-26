@@ -2,6 +2,7 @@ header.md
 ../README.md
 ../src/wefx.c
 ../src/math.c
+../src/events.c
 ../src/walloc.h
 ../src/wasm.h
 footer.md

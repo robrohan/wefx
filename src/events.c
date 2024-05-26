@@ -1,3 +1,13 @@
+/*
+
+# Event Queue
+
+In order to process browser events (keyboard and mouse input), we use
+a simple Queue. The Javascript that hosts this code will capture events
+in the browser and pass them into C using the queue. We can then use the
+queue to look at and process those events.
+
+*/
 #include "events.h"
 #include "wasm.h"
 /*
@@ -8,13 +18,6 @@ E.g. Mouse down, mouse move, key down, etc.
 */
 EXPORT wefx_event_queue *wefx_q = NULL;
 /*
-
-# Event Queue
-
-In order to process browser events (keyboard and mouse input), we use
-a simple Queue. The Javascript that hosts this code will capture events
-in the browser and pass them into C using the queue. We can then use the
-queue to look at and process those events.
 
 ## Open Events - wefx_open_events
 

@@ -4,8 +4,6 @@ Wefx is a simple graphics library for drawing using C, WASM ([Web Assembly][weba
 WebGL or anything like that. It is doing very basic pixel manipulation and
 has very simple functions to draw pixels and lines.
 
-If you would like to see an overview of Wefx, you can watch a [video of the project on YouTube][video]
-
 You can also [download the documentation](https://raw.githubusercontent.com/robrohan/wefx/main/docs/manual.pdf)
 
 ![Example Screenshot](https://raw.githubusercontent.com/robrohan/wefx/main/docs/wefx_shot.png)
@@ -177,6 +175,5 @@ Studio. You will have to install `clang` as an add on, and then setup the
 build flags to the ones shown in the `Makefile`.
 
 [gfx]: https://www3.nd.edu/~dthain/courses/cse20211/fall2013/gfx/
-[video]: https://www.youtube.com/watch?v=vrqixVOd-rc
 [webassembly]: https://en.wikipedia.org/wiki/WebAssembly
 [htmlcanvas]: https://en.wikipedia.org/wiki/Canvas_element
