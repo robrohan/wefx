@@ -37,7 +37,6 @@ int wefx_ysize();
 
 extern void print(const char *);
 
-// Check to see if an event is waiting.
-// int wefx_event_waiting();
+void wefx_draw(unsigned int *screen);
 
 #endif // WEFX__H
