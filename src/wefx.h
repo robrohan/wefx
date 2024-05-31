@@ -19,7 +19,7 @@ void wefx_line(int x1, int y1, int x2, int y2);
 void wefx_color(unsigned int red, unsigned int green, unsigned int blue);
 
 // Clear the graphics window to the background color.
-void wefx_clear();
+void wefx_clear(void);
 
 // Change the current background color.
 void wefx_clear_color(unsigned int red, unsigned int green, unsigned int blue);
@@ -32,8 +32,8 @@ void wefx_clear_color(unsigned int red, unsigned int green, unsigned int blue);
 // int wefx_ypos();
 
 // Return the X and Y dimensions of the window.
-int wefx_xsize();
-int wefx_ysize();
+int wefx_xsize(void);
+int wefx_ysize(void);
 
 extern void print(const char *);
 

@@ -1,18 +1,28 @@
 # wefx
 
-Wefx is a simple graphics library for drawing using C, WASM ([Web Assembly][webassembly]), and an [HTML canvas][htmlcanvas]. It aims to serve a similar purpose as [gfx][gfx], but provide an introduction to using C and WASM. Wefx is meant to be a teaching / learning tool for C and graphics. Wefx is not using OpenGL /
-WebGL or anything like that. It is doing very basic pixel manipulation and
-has very simple functions to draw pixels and lines.
+Wefx is a simple graphics library for drawing using C11, WASM 
+([Web Assembly][webassembly]), and an [HTML canvas][htmlcanvas]. 
+It aims to serve a similar purpose as [gfx][gfx], but provide an introduction 
+to using C and WASM. Wefx is meant to be a teaching / learning tool for C and 
+graphics. Wefx is not using OpenGL / WebGL or anything like that. It is doing 
+very basic pixel manipulation and has very simple functions to draw pixels and 
+lines.
 
-You can also [download the documentation](https://raw.githubusercontent.com/robrohan/wefx/main/docs/manual.pdf)
+You can also download the 
+[documentation](https://raw.githubusercontent.com/robrohan/wefx/main/docs/manual.pdf)
 
-![Example Screenshot](https://raw.githubusercontent.com/robrohan/wefx/main/docs/wefx_shot.png)
+![Screenshot](https://raw.githubusercontent.com/robrohan/wefx/main/docs/wefx_shot.png)
 
 ## Quick Start
 
-If you are using Ubuntu, you can run `make init` to install the correct version of clang and tools. If you are on another system, you will have to install `clang` yourself. 
+If you are using Ubuntu, you can run `make init` to install the correct 
+version of clang and tools. If you are on another system, you will have to 
+install `clang` yourself. 
 
-Once installed, `make build` should compile `examples/example0.c` into WASM (if there are no errors). If successful, and if you have python installed, you can run `make serve` to start a simple HTTP server and browse to http://localhost:8000 to view wasm output.
+Once installed, `make build` should compile `examples/example0.c` into WASM 
+(if there are no errors). If successful, and if you have python installed, you 
+can run `make serve` to start a simple HTTP server and browse to 
+http://localhost:8000 to view wasm output.
 
 ## Using The Project
 
@@ -41,8 +51,9 @@ You'll need the following programs installed:
 - make (optional - MacOS and Linux)
 - (optional) python3
 
-On MacOS or Linux these tools should be available already, or easily
-installed with homebrew (`brew install`), or Apt (`apt install`), or your local package manager.
+On MacOS or Linux these tools should be available already, or easily installed 
+with homebrew (`brew install`), or Apt (`apt install`), or your local package 
+manager.
 
 ### Compiling
 
@@ -71,7 +82,9 @@ directly from your file system (this is just how wasm loading works).
 If you try to open the `index.html` file directly you will get an error
 like:
 
-> Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at file:///xxxxx/build/wefx.wasm. (Reason: CORS request not http).
+> Cross-Origin Request Blocked: The Same Origin Policy disallows reading the 
+> remote resource at file:///xxxxx/build/wefx.wasm. (Reason: CORS request not 
+> http).
 
 A basic http server comes with python3, and the make file will run that
 server if you run:
@@ -91,9 +104,9 @@ to see the compiled code.
 ---
 
 If you already have a favorite server (for example I use
-[busboy](https://github.com/robrohan/busboy)), you can use that serve to
-serve the `build` directory instead, and then run the `make build` command
-to replace the wasm file as you play around.
+[busboy](https://github.com/robrohan/busboy)), you can use that serve to serve 
+the `build` directory instead, and then run the `make build` command to replace
+the wasm file as you play around.
 
 For example in one shell I run:
 
@@ -112,15 +125,16 @@ And then simply refresh the browser to see changes.
 ### Writing Code
 
 If just teaching / learning about graphics, you'll only need to edit the
-[./examples/example0.c](./examples/example0.c) file. There are two entry
-points into that file:
+[./examples/example0.c](./examples/example0.c) file. There are two entry points 
+into that file:
 
 | Function | Usage |
 | ---------| -----|
 |init()| Called once at the start of the app|
 |main_loop(time)| Called every frame with time being time since app start|
 
-You can also add your own entry files in the examples directory, and then pass them to the build script using the _MAIN_ variable. For example:
+You can also add your own entry files in the examples directory, and then pass 
+them to the build script using the _MAIN_ variable. For example:
 
 ```{sh}
 make build MAIN=examples/example1.c
@@ -132,7 +146,8 @@ This will build the WASM file using `example1.c` as the entry point.
 
 #### API
 
-The API calls try to emulate [gfx][gfx] as much as possible. Here are a few currently supported functions (see the documentation for a full reference):
+The API calls try to emulate [gfx][gfx] as much as possible. Here are a few 
+currently supported functions (see the documentation for a full reference):
 
 | Function | Does |
 | ---------| -----|
@@ -145,7 +160,8 @@ The API calls try to emulate [gfx][gfx] as much as possible. Here are a few curr
 
 #### Coordinate System
 
-The coordinate system in newer versions has changed to reflect most other drawing styles. The system works thusly:
+The coordinate system in newer versions has changed to reflect most other 
+drawing styles. The system works thusly:
 
 ```
       +Y

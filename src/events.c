@@ -25,7 +25,7 @@ Similar to how _wefx\_open_ created screen memory, the _wefx_open_events_
 function allocates memory for the event queue.
 
 */
-wefx_event_queue *wefx_open_events()
+wefx_event_queue *wefx_open_events(void)
 {
     wefx_q = malloc(sizeof(struct wefx_event_queue));
     // wefx_q = &(const struct wefx_event_queue){ 0 };

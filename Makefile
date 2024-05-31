@@ -7,6 +7,12 @@ PANDOC?=pandoc
 NARRATIVE?=narrative
 MAIN?=examples/example0.c
 
+C_ERRS += -Wall -Wextra -Wpedantic \
+		-Wformat=2 -Wno-unused-parameter -Wshadow \
+		-Wwrite-strings -Wstrict-prototypes -Wold-style-definition \
+		-Wredundant-decls -Wnested-externs -Wmissing-include-dirs \
+		-Wno-unused
+
 NO_BUILT_INS=-fno-builtin-sin -fno-builtin-cos -fno-builtin-tan \
 	-fno-builtin-ceil -fno-builtin-floor \
 	-fno-builtin-pow -fno-builtin-round  \
@@ -35,10 +41,9 @@ clean:
 
 build: clean
 	mkdir -p build
-	$(CC) \
+	$(CC) $(C_ERRS) \
 		--target=wasm32 \
-		-std=c99 \
-		-Wall \
+		-std=c11 \
 		-g \
 		-nostdlib \
 		-Os -flto \
@@ -82,7 +87,7 @@ test: clean_test
 
 	mkdir -p build
 # add -lm if you want to test against built in math.h
-	$(CC) -std=c99 -m32 -g \
+	$(CC) $(C_ERRS) -std=c11 -m32 -g \
 		$(NO_BUILT_INS) \
 		src/math.c src/wefx.c src/test.c \
 		-o build/test

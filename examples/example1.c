@@ -5,7 +5,7 @@
 #define W 1024
 #define H 768
 
-EXPORT int init()
+EXPORT int init(void)
 {
     int err = wefx_open(W, H, "Test Window");
     if (err)

@@ -12,7 +12,7 @@
 
 // Called once at startup
 // note: memory not initialized yet so 'print' will not work
-EXPORT int init()
+EXPORT int init(void)
 {
     // Open a "window"
     int err = wefx_open(W, H, "Logo Window");

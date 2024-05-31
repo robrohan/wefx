@@ -44,7 +44,7 @@ typedef struct wefx_event_queue
 
 //////////////////////////////////////////////
 
-wefx_event_queue *wefx_open_events();
+wefx_event_queue *wefx_open_events(void);
 
 void wefx_init_queue(wefx_event_queue *q);
 
