@@ -30,11 +30,27 @@ about:
 	@echo "                MAIN=examples/xxxx.c to override entry file"
 	@echo "make test    -  run some basic tests."
 	@echo ""
+	@echo "make init_linux - install needed libs on linux"
+	@echo "make init_mac   - install needed libs on macos"
 
-init:
+# Install libraries needed on linux
+init_linux:
 	sudo apt install clang-14
 	sudo apt install lld-14
 	sudo apt-get install gcc-multilib
+
+# Install libraries needed on MacOS
+init_mac:
+#	You'll need homebrew installed: https://brew.sh/
+#	also be careful if you already have xcode installed
+#	as this will give you two versions of clang which can be
+#	confusing
+	brew install llvm
+	brew install lld
+	clang --version
+	wasm-ld --version
+	@echo "if the above command isn't found"
+	@echo "try to run: 'brew reinstall llvm' and/or 'brew reinstall lld'"
 
 clean:
 	rm -rf build
@@ -87,9 +103,10 @@ test: clean_test
 
 	mkdir -p build
 # add -lm if you want to test against built in math.h
-	$(CC) $(C_ERRS) -std=c11 -m32 -g \
+# and -m32 for non-mac systems (mac wont do 32 bits anymore)
+	$(CC) $(C_ERRS) -std=c11 -g \
 		$(NO_BUILT_INS) \
-		src/math.c src/wefx.c src/test.c \
+		src/math.c src/wefx.c src/events.c src/test.c \
 		-o build/test
 	./build/test
 

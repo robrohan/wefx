@@ -4,6 +4,7 @@
  */
 #include "math.h"
 #include "wefx.h"
+#include "events.h"
 #include <stdio.h>
 
 int main()
