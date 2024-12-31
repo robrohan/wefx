@@ -36,6 +36,7 @@ static color fg_color = 0;
 static color bg_color = 0;
 static int w = 0;
 static int h = 0;
+static int psize = 1;
 /*
 
 ## Opening a Canvas - wefx_open
@@ -98,6 +99,17 @@ void wefx_color(unsigned int red, unsigned int green, unsigned int blue)
 }
 /*
 
+## Set the Drawing Pixel Size
+
+Default pixel size is 1
+
+*/
+void wefx_set_psize(int size)
+{
+    psize = size;
+}
+/*
+
 ## Draw a Single Point - wefx_point
 
 This function sets one pixel value to a color. It set one of the values in
@@ -108,15 +120,44 @@ By setting the value at $x + y * w$ we are drawing a point at $(x,y)$ on the scr
 */
 void wefx_point(int x, int y)
 {
+#ifdef WEFX_ORIGIN_TOP_LEFT
+    int offset = x + y * w;
+#elif WEFX_ORIGIN_CENTER
+    int cx = ((w / 2) + x);
+    int cy = ((h / 2) + y);
+    int offset = cx + cy * w;
+#else // WEFX_ORIGIN_BOTTOM_LEFT
     int inboundx = x-1 < 0 ? 0 : x-1;
     int inboundy = y+1 > h ? y : y+1;
-    //               because 0,0 should display at the bottom left
-    //               we need to add 1 to the height or 0 is offscreen
+    // because 0,0 should display at the bottom left
+    // we need to add 1 to the height or 0 is offscreen
     int offset = inboundx + (((int)abs( (inboundy) - h) * w));
     if(offset > w*h || offset < 0) {
         return;
     }
+#endif
     buffer[offset] = fg_color;
+}
+/*
+## Draw a Pixel
+
+This function draw's a pixel to the screen. This is similar to "point" but can
+have an arbitrary size. This is useful for stylized rendering. For example if
+you want a more chucky rendering, you can use a 4x4 pixel size
+
+The start point of the pixel is the top left of the group.
+
+*/
+void wefx_pixel(int x0, int y0)
+{
+    y0 = y0 + psize;
+    for (int r = 0; r <= psize; r++)
+    {
+        for (int c = 0; c <= psize; c++)
+        {
+            wefx_point(x0 + r, y0 - c);
+        }
+    }
 }
 /*
 
@@ -165,7 +206,7 @@ void wefx_line(int x0, int y0, int x1, int y1)
 
     for (;;)
     {
-        wefx_point(x0, y0);
+        wefx_pixel(x0, y0);
         if (x0 == x1 && y0 == y1)
             break;
         int e2 = 2 * error;
@@ -187,28 +228,43 @@ void wefx_line(int x0, int y0, int x1, int y1)
 }
 /*
 
+## Draw a Rectangle - wefx_rect
+
+Draws a rectangle where x0,y0 is the top left of the rectangle and
+x1,y1 is the bottom right.
+
+*/
+void wefx_rect(int x0, int y0, int x1, int y1)
+{
+    wefx_line(x0, y0, x0, y1);
+    wefx_line(x0, y1, x1, y1);
+    wefx_line(x1, y1, x1, y0);
+    wefx_line(x1, y0, x0, y0);
+}
+/*
+
 ## Draw a Circle - wefx_circle
 
 This function can be called to draw a circle. It also uses the
 currently set foreground color. It uses the Midpoint Circle Algorithm [@MidpointCircleAlgorithm_2022_].
 
 */
-void wefx_circle(int x0, int y0, int r0)
+void wefx_circle(int x0, int y0, int r)
 {
-    int x = r0;
+    int x = r;
     int y = 0;
     int err = 0;
     while (x >= y)
     {
-        wefx_point(x0 + x, y0 + y);
+        wefx_pixel(x0 + x, y0 + y);
 
-        wefx_point(x0 + y, y0 + x);
-        wefx_point(x0 - y, y0 + x);
-        wefx_point(x0 - x, y0 + y);
-        wefx_point(x0 - x, y0 - y);
-        wefx_point(x0 - y, y0 - x);
-        wefx_point(x0 + y, y0 - x);
-        wefx_point(x0 + x, y0 - y);
+        wefx_pixel(x0 + y, y0 + x);
+        wefx_pixel(x0 - y, y0 + x);
+        wefx_pixel(x0 - x, y0 + y);
+        wefx_pixel(x0 - x, y0 - y);
+        wefx_pixel(x0 - y, y0 - x);
+        wefx_pixel(x0 + y, y0 - x);
+        wefx_pixel(x0 + x, y0 - y);
 
         y += 1;
         err += 2 * y + 1;
@@ -230,17 +286,24 @@ drawn to the screen.
 This method is called from Javascript and asks us to draw our buffer to
 what it considers to be the screen.
 
----
-
-*Note*: there might be a faster / better way to do this.
-
----
-
 */
 EXPORT void wefx_draw(unsigned int *iscreen)
 {
-    for (int q = 0; q < w * h; q++)
+    // TODO: memcopy
+    for (int q = 0; q < (w * h); ++q)
         iscreen[q] = buffer[q];
+}
+/*
+
+## Raw Screen Buffer
+
+This grabs the raw buffer of pixels. Similar to wefx_draw, but instead
+of copying the data to a new array, this gets the raw data.
+
+*/
+unsigned int * wefx_get_buffer(void)
+{
+    return buffer;
 }
 /*
 

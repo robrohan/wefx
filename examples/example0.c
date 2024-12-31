@@ -66,6 +66,7 @@ void draw(int time)
 {
     wefx_clear();
     wefx_color(rand() % 0xff, rand() % 0xff, rand() & 0xff);
+    wefx_set_psize(2);
 
     // W
     wefx_line(15, 35, 20, 15);
