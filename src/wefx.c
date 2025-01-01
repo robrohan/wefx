@@ -9,15 +9,7 @@ enumerations we will be using throughout this implementation file.
 
 */
 #include "wefx.h"
-/*
 
-Additionally, we include our _wasm.h_ file which will allow us to _EXPORT_ functions and
-variables to Javascript.
-
-*/
-#include "wasm.h"
-
-typedef unsigned int color;
 /*
 
 Make variables for our double buffered screen, and export the _screen_ variable so Javascript
@@ -32,8 +24,8 @@ We also defined some global variables for foreground and background colour, as w
 global width (_w_) and height (_h_) variable.
 
 */
-static color fg_color = 0;
-static color bg_color = 0;
+static unsigned int fg_color = 0;
+static unsigned int bg_color = 0;
 static int w = 0;
 static int h = 0;
 static int psize = 1;
@@ -81,8 +73,8 @@ static int rgb_to_int(unsigned int red, unsigned int green, unsigned int blue)
     red = MIN(red, 255);
     green = MIN(green, 255);
     blue = MIN(blue, 255);
-    int color = (0xFF << 24) + (blue << 16) + (green << 8) + (red);
-    return color;
+    int clr = (0xFF << 24) + (blue << 16) + (green << 8) + (red);
+    return clr;
 }
 /*
 

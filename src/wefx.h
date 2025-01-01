@@ -1,8 +1,25 @@
 #ifndef WEFX__H
 #define WEFX__H
 
+#ifndef WEFX_NO_MATH
 #include "math.h"
+#endif
+
+#ifndef WEFX_NO_WALLOC
 #include "walloc.h"
+#else
+#include <stdlib.h>
+#endif
+
+#ifndef WEFX_NO_EXPORT
+#include "wasm.h"
+#else
+#define EXPORT
+#endif
+
+#ifndef MIN
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+#endif
 
 // Open a new graphics window.
 int wefx_open(unsigned int width, unsigned int height, const char *title);
